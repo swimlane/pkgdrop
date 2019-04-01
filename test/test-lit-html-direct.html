@@ -1,0 +1,17 @@
+<!doctype html>
+<head>
+  <base href="/" >                
+  </script>
+  <script type="module">
+    import { html, render } from '/-/lit-html@1.0.0/lit-html.js';
+
+    // This is a lit-html template function. It returns a lit-html template.
+    const helloTemplate = (name) => html`<div>Hello ${name}!</div>`;
+
+    // This renders <div>Hello Steve!</div> to the document body
+    render(helloTemplate('World'), document.getElementById("hello"));
+  </script>
+</head>
+<body>
+  <div id="hello"></div>
+</body>

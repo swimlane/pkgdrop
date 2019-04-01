@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "lit-html@1.0.0": "/bundle/lit-html@1.0.0.mjs",
+    "lit-element@2.1.0": "/bundle/lit-element@2.1.0.mjs",
+    "haunted@4.2.0": "/bundle/haunted@4.2.0.mjs",
+    "d3@5.9.2": "/bundle/d3@5.9.2.mjs"
+  }
+}
