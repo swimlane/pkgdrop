@@ -1,6 +1,5 @@
 import { GluegunToolbox } from 'gluegun';
 import { rollup } from 'rollup';
-import * as resolve from 'rollup-plugin-node-resolve';
 import * as pacote from 'pacote';
 import { join } from 'path';
 
@@ -22,14 +21,45 @@ export default {
 
     const packages = parameters.string.split(' ');
 
-    const importmapPath = filesystem.path(config.bundle_path, 'importmap.json');
+    const importmapPath = filesystem.path(config.package_path, 'importmap.json');
     let importmap = await filesystem.readAsync(importmapPath, 'json');
 
     if (!importmap) {
       importmap = {
-        imports: {}
+        imports: {},
+        scopes: {}
       };
     }
+
+    const resolve = () => ({
+      async resolveId(importee: string, importer: string) {
+        if ( /\0/.test( importee ) ) return null;
+        if ( !importer ) return null;
+
+        const basedir = filesystem.path(config.package_path);
+    
+        importer = importer.replace(basedir, '');
+    
+        const firstIndex = importer.indexOf('/');
+        const secondIndex = importer.indexOf('/', firstIndex + 1);
+        const scope = importer.slice(firstIndex + 1, secondIndex);
+
+        if (!importmap.scopes[scope]) {
+          return;
+        }
+    
+        const scopes = importmap.scopes[scope];
+    
+        for (const s in scopes) {
+          if (importee.startsWith(s)) {
+            const im = importee.replace(s, scopes[s]).replace(config.package_root, '');
+            return filesystem.path(config.package_path, im);
+          }
+        }
+        
+        return;
+      }
+    });
 
     while (packages.length > 0) {
       const pkg = packages.shift();
@@ -51,20 +81,15 @@ export default {
         plugins: [resolve()]
       };
 
-      const packageBundle = await rollup(inputOptions);
+      const packageBundle = await rollup(inputOptions as any);
       const out = await packageBundle.generate(outputOptions);
 
       const { code } = out.output[0];
-      const outputFilename = `${packageName}.mjs`;
-      const outputPath = join(config.bundle_path, outputFilename);
+      const outputFilename = `${packageName}.bundle.mjs`;
+      const outputPath = join(config.package_path, outputFilename);
 
       print.info(`Writing bundle for ${packageName}`);
       await filesystem.writeAsync(outputPath, code);
-
-      importmap.imports[packageName] = join(config.bundle_root, outputFilename);
     }
-
-    print.info(`Writing importmap`);
-    await filesystem.writeAsync(importmapPath, importmap);
   }
 };

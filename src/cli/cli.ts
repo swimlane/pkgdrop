@@ -18,11 +18,10 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
       'patching'
     ])
     .command({
-      name: 'aib',
+      name: 'ab',
       run: async toolbox => {
         const { parameters: { string } } = toolbox;
         await cli.run(`a ${string}`);
-        await cli.run(`i ${string}`);
         await cli.run(`b ${string}`);
       }
     })
