@@ -14,34 +14,23 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:setup": "npm run test:clean && npm run test:setup:pkgs && npm run test:setup:bundles",
-    "test:setup:pkgs": "NODE_ENV=development ./bin/airdrop a es-module-shims@0.2.3 d3@5.9.2 lit-html@1.0.0",
-    "test:setup:bundles": "NODE_ENV=development ./bin/airdrop ab haunted@4.2.0 lit-element@2.1.0",
+    "test:setup:pkgs": "NODE_ENV=development airdrop add es-module-shims@0.2.3 d3@5.9.2 lit-html@1.0.0",
+    "test:setup:bundles": "NODE_ENV=development airdrop ab haunted@4.2.0 lit-element@2.1.0",
     "test:clean": "rm -rf \"./test/-\""
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",
-    "compression": "^1.7.3",
-    "decompress": "^4.2.0",
     "gluegun": "^3.0.0",
-    "live-plugin-manager": "^0.12.0",
     "ngraph.graph": "0.0.18",
     "npmgraphbuilder": "^2.2.0",
     "pacote": "^9.5.0",
-    "q": "^1.5.1",
     "reflect-metadata": "^0.1.12",
-    "rimraf": "^2.6.2",
-    "rollup-pluginutils": "^2.4.1",
-    "rxjs": "^6.2.2",
-    "semver": "^5.6.0",
-    "serve-index": "^1.9.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-security": "^1.15.0",
     "tslint-config-swimlane": "^4.0.0",
-    "typescript": "^3.0.1",
-    "validate-npm-package-name": "^3.0.0"
+    "typescript": "^3.0.1"
   },
   "devDependencies": {
-    "@types/express": "^4.16.0",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",
     "@types/supertest": "^2.0.5",
@@ -53,7 +42,8 @@
     "ts-loader": "^4.4.2",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.5.0",
-    "tslint": "5.11.0"
+    "tslint": "5.11.0",
+    "rimraf": "^2.6.2"
   },
   "jest": {
     "moduleFileExtensions": [

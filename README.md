@@ -1,15 +1,71 @@
 <p align="center">
-  <img src="./public/airdrop.png" width="200" alt="airdrop Logo" />
+  <img src="./airdrop.png" width="200" alt="airdrop Logo" />
 </p>
 
-# airdrop
+airdrop-cli
+===========
 
-airdrop is a self-hosted native ES modules content delivery server for JavaScript packages from [npm](https://www.npmjs.com/).
-Use it to load files from downloaded npm packages using the native browser ES module loader with no connection to npm needed at runtime:
+airdrop-cli is a package delivery tool for [npm](https://www.npmjs.com/) packages.
+Use it to download packages from npm to be loaded in the browser using native browser ES module loader with no connection to npm needed at runtime.
+
+## Installation
+
+```bash
+$ npm airdrop -g
+```
+
+## CLI Usage
+
+### Adding Packages
+
+```bash
+airdrop add <package>
+```
+
+Packages added using `airdrop add <package>` will be downloaded into a `/<root>/<name>@<version/` directory (the <root> directory is configurable via `airdrop.config.js`).  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
+
+For example, running `airdrop add lit-element` will result in a root directory structure of:
+
+```
+(root)
+├── lit-element@2.0.1/
+├── lit-html@1.0.0/
+└── importmap.json
+```
+
+> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version `es-module-shims`.
+
+### Bundling
+
+```bash
+airdrop bundle <package>
+```
+
+The command will bundle the `lit-element` module (and dependencies) into a esm bundle located in the output directory.
+
+For example, running `airdrop bundle lit-element` will result in a root directory structure of:
+
+```
+(root)
+├── lit-element@2.0.1/
+├── lit-html@1.0.0/
+├── lit-element@2.0.1.bundle.js
+└── importmap.json
+```
+
+> This command requires that the package has already been added using the `add` command.  Use the `add-bundle` command to add and bundle in one step.
+
+## In browser usage
+
+### Fixed Versions
+
+The added ES modules can be loaded in the browser using a absolute path and full version.
+
+- `/<root>/<name>@<version>(/file-path)?`
 
 ```html
 <script type="module">
-  import { html, render } from '/-/lit-html/';
+  import { html, render } from '/-/lit-html@.1.0.0/lit-html.js';
 </script>
 ```
 
@@ -17,124 +73,74 @@ Or with the dynamic `import()`:
 
 ```html
 <script type="module">
-  import('/-/lit-html/')
+  import('/-/lit-html@.1.0.0/lit-html.js')
     .then(({ html, render }) => {
       console.log(html, render);
     });
 </script>
 ```
 
-## URL Formats
-- Fixed Version: `/-/package-name@exact-version(/file-path)?`
-- Version Range: `/-/package-name@version-range(/file-path)?`
-- Tagged version: `/-/package-name@version-tag(/file-path)?`
-- Latest Version: `/-/package-name(/file-path)?`
-
-Supported version ranges are [semver ranges](https://docs.npmjs.com/misc/semver) including partial version range such as`@X`, `@X.Y`, `@X.Y.Z` or the exact version.  If you omit the file path (i.e. use a “bare” URL), airdrop will serve the file specified by the `module` field in `package.json`, with fall back to `browser` or `main`.
-
-### Examples
-Using a fixed version and full path:
-
-```
-/-/lit-html@1.0.0/lit-html.js
-```
-
-You may omit the file path. In this case `lit-html.js` is specified in the `module` field in `package.json`.
-
-```
-/-/lit-html@1.0.0/
-```
-
-You may also use a [semver range](https://docs.npmjs.com/misc/semver) or a [tag](https://docs.npmjs.com/cli/dist-tag) instead of a fixed version number, or omit the version/tag entirely to use the latest tag.
-
-```
-/-/lit-html@1/
-/-/lit-html@latest/
-/-/lit-html/
-```
-
-## Bare imports
+### Bare imports
 
 While most modern browsers include support for ES modules, bare package specifiers are explicitly forbidden.  In order to import bare package specifiers like `import "lit-html"` we need [import maps](https://github.com/WICG/import-maps).
 
-> Note: Import maps are still an experimental specification.  Use [es-module-shims](https://github.com/guybedford/es-module-shims) to polyfill most of the newer modules specifications.  [SystemJS](https://github.com/systemjs/systemjs) also supports import maps loads only System.register modules or AMD modules via extras.
+> Note: Import maps are still an experimental specification.  Use [es-module-shims](https://github.com/guybedford/es-module-shims) to polyfill most of the newer modules specifications.  [SystemJS](https://github.com/systemjs/systemjs) also supports import maps.  However, `SystemJS` only loads `System.register` modules or AMD modules via extras.
 
-Import maps may be dynamically generated for a given entry point:
+```html
+<script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
+<script type="importmap-shim" src="/-/importmap.json"></script>
+<script type="module-shim">
+  import { LitElement, css } from 'lit-element@2.1.0';
+  import { html } from 'lit-html@1.0.0';
 
-```
-/importmap/?imports=lit-element@2.0.1
-```
+  class MyElement extends LitElement {
+  
+    static get properties() {
+      return {
+        mood: {type: String}
+      }
+    }
+    
+    static get styles() {
+      return css`.mood { color: green; }`;
+    }
+  
+    render() {
+      return html`Web Components are <span class="mood">${this.mood}</span>!`;
+    }
+  }
 
-Imports listed in the query support the same version ranges listed above (fixed, range, tagged, and latest) as well as multiple imports:
-
-```
-/importmap/?imports=lit-element@0&imports=lit-html@latest
-```
-
-## Adding Packages
-
-Packages served by `airdrop` are located in the `pkg` directory (configurable per env in `config/`, `pkg-test` for development).  At the root of `pkg` there should be a single `.json` file for each package name.  This file is the [package metadata document](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md) containing details on each available package version.
-
-> Note: The package metadata documents here are typically a subset of the documents returned from npm's [package endpoints](https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#package-endpoints); containing only versions loaded locally.
-
-In the same directory the package contents should be stored as a tarball (currently optional) or unpacked (currently required) into a directory with the fixed version name.  This needs to be done for each package, each version, and all dependencies and peer dependencies.
-
-`airdrop` includes a cli for adding packages directly from npm (connection to npm required here for setup only).  For example the following command:
-
-```bash
-./bin/airdrop add lit-element
-```
-
-Will retrieve the metadata for `lit-element` (`latest` in this case), download the tarball, and uncompress it to the appropriate location.  The same will happen for each dependency and peer dependency of `lit-element` (in this case only `lit-html`).  The resulting `pkg` directory structure will be:
-
-```
-pkg
-├── lit-element.json        // metadata for lit-element
-├── lit-element-2.0.1.tgz   // package tarball (optional)
-├── lit-element@2.0.1/      // package content
-├── lit-html.json           // metadata for lit-html
-├── lit-html-1.0.0.tgz      // package tarball (optional)
-└── lit-element@1.0.0/      // package content
+  customElements.define('my-element', MyElement);
+</script>
 ```
 
-The cli supports the same version ranges discussed above.
+### Bundles
 
-## Installation
+Bundles can be used without the need for an import map.
 
-```bash
-$ npm install
-```
+```html
+<script type="module">
+  import { LitElement, html, css } from '/-/lit-element@2.1.0.bundle.js';
 
-## Running the app
+  class MyElement extends LitElement {
+  
+    static get properties() {
+      return {
+        mood: {type: String}
+      }
+    }
+    
+    static get styles() {
+      return css`.mood { color: green; }`;
+    }
+  
+    render() {
+      return html`Web Components are <span class="mood">${this.mood}</span>!`;
+    }
+  }
 
-Before running in dev mode use the `airdrop` cli to setup test entry points:
-
-```bash
-npm run test:setup
-```
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+  customElements.define('my-element', MyElement);
+</script>
 ```
 
 ## License

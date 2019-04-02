@@ -1,12 +1,13 @@
 import { GluegunToolbox } from 'gluegun';
-import * as pacote from 'pacote';
-import * as http from 'http';
-import * as querystring from 'querystring';
-import * as q from 'q';
+import { manifest, extract } from 'pacote';
+import { get } from 'http';
+import { stringify } from 'querystring';
 import { join } from 'path';
 
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
+
+import * as cosmiconfig from 'cosmiconfig'
 
 export default {
   name: 'add',
@@ -15,11 +16,18 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config, filesystem } = toolbox;
+    const { parameters, print, config: { loadConfig, airdrop }, filesystem, runtime: { brand } } = toolbox;
+
+    const config = {
+      ...airdrop,
+      ...loadConfig(brand, filesystem.cwd())
+    };
 
     const packages = parameters.string.split(' ');
 
     const importmapPath = filesystem.path(config.package_path, 'importmap.json');
+
+    print.info(`Reading existing importmap from${importmapPath}`);
     let importmap = await filesystem.readAsync(importmapPath, 'json');
 
     if (!importmap) {
@@ -35,11 +43,11 @@ export default {
     const imports = {};
     const scopes = {};
 
-    while (packages.length > 0) {
-      const pkg = packages.shift();
-
+    const addScopes = packages.map(async (pkg) => {
       print.info(`Fetching package information for ${pkg}`);
-      const pkgInfo = await pacote.manifest(pkg, {
+
+      // TODO: Cache these calls?
+      const pkgInfo = await manifest(pkg, {
         'full-metadata': true
       });
 
@@ -66,16 +74,18 @@ export default {
           }
         });
       });
-    }
+    });
 
-    const dependecies = Object.keys(scopes);
+    await Promise.all(addScopes);
 
-    while (dependecies.length > 0) {
-      const pkg = dependecies.shift();
+    const extractPackages = Object.keys(scopes).map((pkg: string) => {
+      // TODO: Skip this for packages that already exist (with --force option)
       const packagePath = filesystem.path(config.package_path, pkg);
       print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
-      await pacote.extract(pkg, packagePath);
-    }
+      return extract(pkg, packagePath);
+    });
+
+    await Promise.all(extractPackages);
 
     const map = {
       imports: {
@@ -88,22 +98,21 @@ export default {
       }
     };
 
-    print.info(`Writing importmap`);
+    print.info(`Writing importmap to ${importmapPath}`);
     await filesystem.writeAsync(importmapPath, map);
   }
 };
 
 function httpClient(url: string, data: string) {
-  var defer = q.defer();
-  http.get(url + '?' + querystring.stringify(data), function (res) {
-    var body = '';
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      body += chunk;
-    }).on('end', function () {
-      defer.resolve({ data: JSON.parse(body) });
+  return new Promise((resolve, reject) => {
+    get(url + '?' + stringify(data), function (res) {
+      var body = '';
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => {
+        body += chunk;
+      }).on('end', () => {
+        resolve({ data: JSON.parse(body) });
+      }).on('error', reject);
     });
   });
-
-  return defer.promise;
 }

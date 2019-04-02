@@ -1,6 +1,6 @@
 import { GluegunToolbox } from 'gluegun';
 import { rollup } from 'rollup';
-import * as pacote from 'pacote';
+import { manifest } from 'pacote';
 import { join } from 'path';
 
 const outputOptions = {
@@ -17,7 +17,12 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config, filesystem } = toolbox;
+    const { parameters, print, config: { loadConfig, airdrop }, filesystem, runtime: { brand } } = toolbox;
+
+    const config = {
+      airdrop,
+      ...loadConfig(brand, filesystem.cwd())
+    };
 
     const packages = parameters.string.split(' ');
 
@@ -61,11 +66,9 @@ export default {
       }
     });
 
-    while (packages.length > 0) {
-      const pkg = packages.shift();
-
+    const buildBundles = packages.map(async (pkg: string) => {
       print.info(`Fetching package info for ${pkg}`);
-      const pkgInfo = await pacote.manifest(pkg, {
+      const pkgInfo = await manifest(pkg, {
         'full-metadata': true
       });
 
@@ -85,11 +88,13 @@ export default {
       const out = await packageBundle.generate(outputOptions);
 
       const { code } = out.output[0];
-      const outputFilename = `${packageName}.bundle.mjs`;
+      const outputFilename = `${packageName}.bundle.js`;
       const outputPath = join(config.package_path, outputFilename);
 
       print.info(`Writing bundle for ${packageName}`);
       await filesystem.writeAsync(outputPath, code);
-    }
+    });
+
+    await Promise.all(buildBundles);
   }
 };
