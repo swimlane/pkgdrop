@@ -14,8 +14,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:setup": "npm run test:clean && npm run test:setup:pkgs && npm run test:setup:bundles",
-    "test:setup:pkgs": "NODE_ENV=development airdrop add es-module-shims@0.2.3 d3@5.9.2 lit-html@1.0.0",
-    "test:setup:bundles": "NODE_ENV=development airdrop ab haunted@4.2.0 lit-element@2.1.0",
+    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 d3@5.9.2 lit-html@1.0.0",
+    "test:setup:bundles": "airdrop add-bundle haunted@4.2.0 lit-element@2.1.0",
     "test:clean": "rm -rf \"./test/-\""
   },
   "dependencies": {

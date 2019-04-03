@@ -13,28 +13,24 @@ const outputOptions = {
 export default {
   name: 'bundle',
   alias: ['b'],
-  description: 'Genreates a bumdle for a specific enrty point',
+  description: 'Generates a bumdle for specific entry points',
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { loadConfig, airdrop }, filesystem, runtime: { brand } } = toolbox;
+    const { parameters, print, config: { airdrop }, filesystem, runtime: { brand } } = toolbox;
 
-    const config = {
-      airdrop,
-      ...loadConfig(brand, filesystem.cwd())
-    };
+    const config = airdrop;
 
-    const packages = parameters.string.split(' ');
+    const packages = parameters.array;
+    const force = parameters.options.force || false;
 
     const importmapPath = filesystem.path(config.package_path, 'importmap.json');
-    let importmap = await filesystem.readAsync(importmapPath, 'json');
 
-    if (!importmap) {
-      importmap = {
-        imports: {},
-        scopes: {}
-      };
-    }
+    print.info(`Reading existing importmap from ${importmapPath}`);
+    const importmap = (await filesystem.readAsync(importmapPath, 'json')) || {};
+
+    importmap.imports = importmap.imports || {};
+    importmap.scopes = importmap.scopes || {};
 
     const resolve = () => ({
       async resolveId(importee: string, importer: string) {
@@ -74,8 +70,15 @@ export default {
 
       const packageName = `${pkgInfo.name}@${pkgInfo.version}`;
       const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
-  
+      const outputFilename = `${packageName}.bundle.js`;
+      const outputPath = join(config.package_path, outputFilename);
+
       const packagePath = filesystem.path(config.package_path, packageName, entryPoint);
+
+      if (!force && filesystem.exists(outputPath)) {
+        print.warning(`Bundle already exists at ${outputPath}, skipping`);
+        return;
+      }
 
       print.info(`Bundling ${packageName}`);
 
@@ -88,10 +91,8 @@ export default {
       const out = await packageBundle.generate(outputOptions);
 
       const { code } = out.output[0];
-      const outputFilename = `${packageName}.bundle.js`;
-      const outputPath = join(config.package_path, outputFilename);
 
-      print.info(`Writing bundle for ${packageName}`);
+      print.success(`Writing bundle for ${packageName}`);
       await filesystem.writeAsync(outputPath, code);
     });
 

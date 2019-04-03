@@ -7,8 +7,6 @@ import { join } from 'path';
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
 
-import * as cosmiconfig from 'cosmiconfig'
-
 export default {
   name: 'add',
   alias: ['a'],
@@ -16,30 +14,23 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { loadConfig, airdrop }, filesystem, runtime: { brand } } = toolbox;
+    const { parameters, print, config: { airdrop }, filesystem, runtime: { brand } } = toolbox;
 
-    const config = {
-      ...airdrop,
-      ...loadConfig(brand, filesystem.cwd())
-    };
+    const config = airdrop;
 
-    const packages = parameters.string.split(' ');
+    const packages = parameters.array;
+    const force = parameters.options.force || false;
 
     const importmapPath = filesystem.path(config.package_path, 'importmap.json');
 
-    print.info(`Reading existing importmap from${importmapPath}`);
-    let importmap = await filesystem.readAsync(importmapPath, 'json');
+    print.info(`Reading existing importmap from ${importmapPath}`);
+    const importmap = (await filesystem.readAsync(importmapPath, 'json')) || {};
 
-    if (!importmap) {
-      importmap = {
-        imports: {},
-        scopes: {}
-      };
-    }
+    importmap.imports = importmap.imports || {};
+    importmap.scopes = importmap.scopes || {};
 
     const graphBuilder = buildGraph(httpClient, 'http://registry.npmjs.org/');
 
-    // TODO: Load existing import map
     const imports = {};
     const scopes = {};
 
@@ -52,6 +43,12 @@ export default {
       });
 
       const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
+
+      if (!force && importmap.imports[pkgId]) {
+        print.warning(`Package ${pkgId} already exists, skipping`);
+        return;
+      }
+
       const entryPoint = pkgInfo.module || pkgInfo.main || 'index.js';
       const outputPath = join(config.package_root, pkgId, entryPoint);
 
@@ -62,15 +59,21 @@ export default {
       const graph = await graphBuilder.createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
 
       graph.forEachNode((n: any) => {
+        if (!force && importmap.scopes[n.id]) {
+          print.warning(`Scopes for ${n.id} already exists, skipping`);
+          return;
+        }
+
         scopes[n.id] = {};
+
         graph.forEachLinkedNode(n.id, (l: any, link: any) => {
           if (link.fromId === n.id) {
             const name = l.data.name;
-            const entryPoint = l.data.module || l.data.main || 'index.js';
+            const ep = l.data.module || l.data.main || 'index.js';
 
             // Re rely on the less generic version first... TODO: fix this
             scopes[n.id][name + '/'] = join(config.package_root, link.toId, '/');
-            scopes[n.id][name] = join(config.package_root, link.toId, entryPoint);
+            scopes[n.id][name] = join(config.package_root, link.toId, ep);
           }
         });
       });
@@ -81,7 +84,7 @@ export default {
     const extractPackages = Object.keys(scopes).map((pkg: string) => {
       // TODO: Skip this for packages that already exist (with --force option)
       const packagePath = filesystem.path(config.package_path, pkg);
-      print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
+      print.success(`Extracting tarball for ${pkg} to ${packagePath}`);
       return extract(pkg, packagePath);
     });
 
@@ -98,7 +101,7 @@ export default {
       }
     };
 
-    print.info(`Writing importmap to ${importmapPath}`);
+    print.success(`Writing importmap to ${importmapPath}`);
     await filesystem.writeAsync(importmapPath, map);
   }
 };
@@ -106,7 +109,7 @@ export default {
 function httpClient(url: string, data: string) {
   return new Promise((resolve, reject) => {
     get(url + '?' + stringify(data), function (res) {
-      var body = '';
+      let body = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => {
         body += chunk;
