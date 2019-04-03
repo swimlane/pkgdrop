@@ -25,6 +25,7 @@
     "npmgraphbuilder": "^2.2.0",
     "pacote": "^9.5.0",
     "reflect-metadata": "^0.1.12",
+    "rollup-plugin-terser": "^4.0.4",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-security": "^1.15.0",
     "tslint-config-swimlane": "^4.0.0",

@@ -1,8 +1,12 @@
 # Todo list
 
-- [ ] add long cache, config cache
-- [ ] use tarballs for package content
-- [ ] 404 page??
-- [ ] render landing page from readme?
-- [ ] namespace registry (`npm:)`?
-- [ ] use ValidationPipe
+- [x] Skip already installed packages
+- [x] Add `--force` to force already installed packages
+- [x] Add `init` to add config file to cwd
+- [ ] `package.json` config for default adds/bundles?
+- [ ] `--clean`?
+- [ ] Rollup plugins?
+  - [x] `--optimize`
+- [ ] Config list of `package.json` entry points. `--strict`
+- [ ] Config for bundle output (extension).
+- [ ] Do something for peers

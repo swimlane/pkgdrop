@@ -17,20 +17,29 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
       'template',
       'patching'
     ])
+    .defaultCommand({
+      run: async ({ print: { info }, meta: { version }, runtime: { brand } }: GluegunToolbox) => {
+        info(`${brand} version ${version()}`)
+        info(``)
+        info(`  Type ${brand} --help for more info`)
+      }
+    })
     .command({
       name: 'add-bundle',
       alias: ['ab'],
-      run: async toolbox => {
-        const { parameters: { string } } = toolbox;
-        await cli.run(`a ${string}`);
-        await cli.run(`b ${string}`);
+      run: async (toolbox: GluegunToolbox) => {
+        const { parameters, print } = toolbox;
+        const force = parameters.options.force ? '--force' : '';
+        const optimize = parameters.options.optimize ? '--optimize' : '';
+
+        print.info('Adding packages');
+        await cli.run(`a ${parameters.string} ${force}`);
+
+        print.info('Bundling packages');
+        await cli.run(`b ${parameters.string} ${force} ${optimize}`);
       }
     })
     .create();
 
-  // and run it
-  const toolbox = await cli.run(argv);
-
-  // send it back (for testing, mostly)
-  return toolbox;
+  return cli.run(argv);
 }

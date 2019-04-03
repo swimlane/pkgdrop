@@ -14,7 +14,8 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { airdrop }, filesystem, runtime: { brand } } = toolbox;
+    const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
+    const time = timer.start();
 
     const config = airdrop;
 
@@ -81,10 +82,10 @@ export default {
 
     await Promise.all(addScopes);
 
-    const extractPackages = Object.keys(scopes).map((pkg: string) => {
-      // TODO: Skip this for packages that already exist (with --force option)
+    const extractPackages = Object.keys(scopes).map(async (pkg: string) => {
       const packagePath = filesystem.path(config.package_path, pkg);
-      print.success(`Extracting tarball for ${pkg} to ${packagePath}`);
+
+      print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
       return extract(pkg, packagePath);
     });
 
@@ -103,6 +104,8 @@ export default {
 
     print.success(`Writing importmap to ${importmapPath}`);
     await filesystem.writeAsync(importmapPath, map);
+
+    time.done();
   }
 };
 

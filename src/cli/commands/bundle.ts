@@ -2,6 +2,7 @@ import { GluegunToolbox } from 'gluegun';
 import { rollup } from 'rollup';
 import { manifest } from 'pacote';
 import { join } from 'path';
+import { terser } from 'rollup-plugin-terser';
 
 const outputOptions = {
   format: 'esm' as 'esm',
@@ -17,12 +18,14 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { airdrop }, filesystem, runtime: { brand } } = toolbox;
+    const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
+    const time = timer.start();
 
     const config = airdrop;
 
     const packages = parameters.array;
     const force = parameters.options.force || false;
+    const optimize = parameters.options.optimize || false;
 
     const importmapPath = filesystem.path(config.package_path, 'importmap.json');
 
@@ -84,7 +87,10 @@ export default {
 
       const inputOptions = {
         input: [packagePath],
-        plugins: [resolve()]
+        plugins: [
+          resolve(),
+          optimize && terser()
+        ]
       };
 
       const packageBundle = await rollup(inputOptions as any);
@@ -97,5 +103,7 @@ export default {
     });
 
     await Promise.all(buildBundles);
+
+    time.done();
   }
 };
