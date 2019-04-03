@@ -40,7 +40,7 @@ For example, running `airdrop add lit-element` will result in a root directory s
 └── importmap.json
 ```
 
-> The `<path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps the address `<root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be pan absolute URL.
+> The `<path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps the address `<root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
 ### Bundling
 
@@ -48,10 +48,10 @@ For example, running `airdrop add lit-element` will result in a root directory s
 airdrop bundle <package> [--force] [--optimize]
 ```
 
-* `--force`: force airdrop to add packages that have already been added.
+* `--force`: force airdrop to bundle packages that have already been bundle.
 * `--optimize`: minify the generated bundle.
 
-The command will bundle the `<package>` package (and dependencies) into a esm bundle located in the `<path>` directory.
+The command will bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<path>` directory.  The import-map is not updated when bundling.
 
 For example, running `airdrop bundle lit-element` will result in a root directory structure of:
 
