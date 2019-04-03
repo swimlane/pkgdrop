@@ -14,39 +14,49 @@ Use it to download packages from npm to be loaded in the browser using native br
 $ npm airdrop -g
 ```
 
+> Or use `npx airdrop`
+
 ## CLI Usage
 
 ### Adding Packages
 
 ```bash
-airdrop add <package>
+airdrop add <package> [--force]
 ```
 
-Packages added using `airdrop add <package>` will be downloaded into a `/<root>/<name>@<version/` directory (the <root> directory is configurable via `airdrop.config.js`).  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
+* `<package>`: npm package (with optional version or tag) to add.
+* `--force`: force airdrop to add packages that have already been added.
+
+> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version `es-module-shims`.
+
+Packages added using `airdrop add <package>` will be downloaded into a `/<path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
 
 For example, running `airdrop add lit-element` will result in a root directory structure of:
 
 ```
-(root)
+<path>
 ├── lit-element@2.0.1/
 ├── lit-html@1.0.0/
 └── importmap.json
 ```
 
-> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version `es-module-shims`.
+> The `<path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps the address `<root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be pan absolute URL.
 
 ### Bundling
 
 ```bash
-airdrop bundle <package>
+airdrop bundle <package> [--force] [--optimize]
 ```
 
-The command will bundle the `lit-element` module (and dependencies) into a esm bundle located in the output directory.
+* `--force`: force airdrop to add packages that have already been added.
+* `--optimize`: minify the generated bundle.
+
+The command will bundle the `<package>` package (and dependencies) into a esm bundle located in the `<path>` directory.
 
 For example, running `airdrop bundle lit-element` will result in a root directory structure of:
 
 ```
-(root)
+<path>
 ├── lit-element@2.0.1/
 ├── lit-html@1.0.0/
 ├── lit-element@2.0.1.bundle.js

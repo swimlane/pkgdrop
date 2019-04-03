@@ -23,7 +23,7 @@ export default {
 
     const config = airdrop;
 
-    const packages = parameters.array;
+    const packages = parameters.array.filter(Boolean);
     const force = parameters.options.force || false;
     const optimize = parameters.options.optimize || false;
 
