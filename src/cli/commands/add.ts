@@ -7,9 +7,10 @@ import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
 
 import {
-  AirdropOptions, PackageInfo, Scopes, Imports, ImportMap,
+  PackageInfo, Scopes, Imports, ImportMap,
   readImportmap, writeImportmap
-} from '../../utils/';
+} from '../../lib/';
+import { AirdropToolbox } from '../extensions/load-location-config';
 
 interface PackageNode {
   id: string;
@@ -27,16 +28,14 @@ export default {
   description: 'Adds a new package',
   hidden: false,
   dashed: false,
-  run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
+  run: async (toolbox: AirdropToolbox) => {
+    const { parameters, print, airdrop, filesystem, timer } = toolbox;
     const time = timer.start();
-
-    const config: AirdropOptions = airdrop;
 
     const packages = parameters.array.filter(Boolean);
 
     print.info(`Reading existing importmap`);
-    const importmap = await readImportmap(config);
+    const importmap = await readImportmap(airdrop);
 
     const { createNpmDependenciesGraph } = buildGraph(httpClient, 'http://registry.npmjs.org/');
 
@@ -52,13 +51,13 @@ export default {
 
       const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
 
-      if (!config.force && importmap.imports[pkgId]) {
+      if (!airdrop.force && importmap.imports[pkgId]) {
         print.warning(`Package ${pkgId} already exists, skipping`);
         return;
       }
 
       const entryPoint = pkgInfo.module || pkgInfo.main || 'index.js';
-      const outputPath = join(config.package_root, pkgId, entryPoint);
+      const outputPath = join(airdrop.package_root, pkgId, entryPoint);
 
       imports[pkgId] = outputPath;
 
@@ -67,7 +66,7 @@ export default {
       const graph = await createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
 
       graph.forEachNode((n: PackageNode) => {
-        if (!config.force && importmap.scopes[n.id]) {
+        if (!airdrop.force && importmap.scopes[n.id]) {
           print.warning(`Scopes for ${n.id} already exists, skipping`);
           return;
         }
@@ -79,8 +78,8 @@ export default {
             const name = linkedNode.data.name;
             const ep = linkedNode.data.module || linkedNode.data.main || 'index.js';
 
-            scopes[n.id][name] = join(config.package_root, link.toId, ep);
-            scopes[n.id][name + '/'] = join(config.package_root, link.toId, '/');
+            scopes[n.id][name] = join(airdrop.package_root, link.toId, ep);
+            scopes[n.id][name + '/'] = join(airdrop.package_root, link.toId, '/');
           }
         });
       });
@@ -89,7 +88,7 @@ export default {
     await Promise.all(addScopes);
 
     const extractPackages = Object.keys(scopes).map(async (pkg: string): Promise<void> => {
-      const packagePath = filesystem.path(config.package_path, pkg);
+      const packagePath = filesystem.path(airdrop.package_path, pkg);
 
       print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
       return extract(pkg, packagePath);
@@ -109,7 +108,7 @@ export default {
     };
 
     print.success(`Writing importmap`);
-    await writeImportmap(map, config);
+    await writeImportmap(map, airdrop);
 
     time.done();
   }

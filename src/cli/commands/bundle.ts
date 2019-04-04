@@ -6,6 +6,8 @@ import {
   AirdropOptions, PackageInfo,
   readImportmap, genererateBundle
 } from '../../lib/';
+import { AirdropToolbox } from '../extensions/load-location-config';
+
 
 export default {
   name: 'bundle',
@@ -13,16 +15,14 @@ export default {
   description: 'Generates a bumdle for specific entry points',
   hidden: false,
   dashed: false,
-  run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
+  run: async (toolbox: AirdropToolbox) => {
+    const { parameters, print, airdrop, filesystem, timer } = toolbox;
     const time = timer.start();
-
-    const config = airdrop as AirdropOptions;
 
     const packages = parameters.array.filter(Boolean);
 
     print.info(`Reading existing importmap`);
-    const importmap = await readImportmap(config);
+    const importmap = await readImportmap(airdrop);
 
     const buildBundles = packages.map(async (pkg: string) => {
       print.info(`Fetching package info for ${pkg}`);
@@ -33,17 +33,17 @@ export default {
       const packageName = `${pkgInfo.name}@${pkgInfo.version}`;
       const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
       const outputFilename = `${packageName}.bundle.js`;
-      const outputPath = join(config.package_path, outputFilename);
+      const outputPath = join(airdrop.package_path, outputFilename);
 
-      const packagePath = filesystem.path(config.package_path, packageName, entryPoint);
+      const packagePath = filesystem.path(airdrop.package_path, packageName, entryPoint);
 
-      if (!config.force && filesystem.exists(outputPath)) {
+      if (!airdrop.force && filesystem.exists(outputPath)) {
         print.warning(`Bundle already exists at ${outputPath}, skipping`);
         return;
       }
 
       print.info(`Bundling ${packageName}`);
-      const code = await genererateBundle(packagePath, importmap, config);
+      const code = await genererateBundle(packagePath, importmap, airdrop);
 
       print.success(`Writing bundle for ${packageName}`);
       await filesystem.writeAsync(outputPath, code);
