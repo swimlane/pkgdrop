@@ -5,7 +5,7 @@ import { join } from 'path';
 import {
   AirdropOptions, PackageInfo,
   readImportmap, genererateBundle
-} from '../../utils/';
+} from '../../lib/';
 
 export default {
   name: 'bundle',
