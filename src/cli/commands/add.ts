@@ -3,9 +3,23 @@ import { manifest, extract } from 'pacote';
 import { get } from 'http';
 import { stringify } from 'querystring';
 import { join } from 'path';
-
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
+
+import {
+  AirdropOptions, PackageInfo, Scopes, Imports, ImportMap,
+  readImportmap, writeImportmap
+} from '../../utils/';
+
+interface PackageNode {
+  id: string;
+  data: PackageInfo;
+}
+
+interface PackageLink {
+  fromId: string;
+  toId: string;
+}
 
 export default {
   name: 'add',
@@ -17,35 +31,28 @@ export default {
     const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
     const time = timer.start();
 
-    const config = airdrop;
+    const config: AirdropOptions = airdrop;
 
     const packages = parameters.array.filter(Boolean);
-    const force = parameters.options.force || false;
 
-    const importmapPath = filesystem.path(config.package_path, 'importmap.json');
+    print.info(`Reading existing importmap`);
+    const importmap = await readImportmap(config);
 
-    print.info(`Reading existing importmap from ${importmapPath}`);
-    const importmap = (await filesystem.readAsync(importmapPath, 'json')) || {};
+    const { createNpmDependenciesGraph } = buildGraph(httpClient, 'http://registry.npmjs.org/');
 
-    importmap.imports = importmap.imports || {};
-    importmap.scopes = importmap.scopes || {};
-
-    const graphBuilder = buildGraph(httpClient, 'http://registry.npmjs.org/');
-
-    const imports = {};
-    const scopes = {};
+    const imports: Imports = {};
+    const scopes: Scopes = {};
 
     const addScopes = packages.map(async (pkg) => {
       print.info(`Fetching package information for ${pkg}`);
 
-      // TODO: Cache these calls?
-      const pkgInfo = await manifest(pkg, {
+      const pkgInfo: PackageInfo = await manifest(pkg, {
         'full-metadata': true
       });
 
       const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
 
-      if (!force && importmap.imports[pkgId]) {
+      if (!config.force && importmap.imports[pkgId]) {
         print.warning(`Package ${pkgId} already exists, skipping`);
         return;
       }
@@ -57,24 +64,23 @@ export default {
 
       print.info(`Fetching dependecy tree for ${pkgId}`);
 
-      const graph = await graphBuilder.createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
+      const graph = await createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
 
-      graph.forEachNode((n: any) => {
-        if (!force && importmap.scopes[n.id]) {
+      graph.forEachNode((n: PackageNode) => {
+        if (!config.force && importmap.scopes[n.id]) {
           print.warning(`Scopes for ${n.id} already exists, skipping`);
           return;
         }
 
         scopes[n.id] = {};
 
-        graph.forEachLinkedNode(n.id, (l: any, link: any) => {
+        graph.forEachLinkedNode(n.id, (linkedNode: PackageNode, link: PackageLink) => {
           if (link.fromId === n.id) {
-            const name = l.data.name;
-            const ep = l.data.module || l.data.main || 'index.js';
+            const name = linkedNode.data.name;
+            const ep = linkedNode.data.module || linkedNode.data.main || 'index.js';
 
-            // Re rely on the less generic version first... TODO: fix this
-            scopes[n.id][name + '/'] = join(config.package_root, link.toId, '/');
             scopes[n.id][name] = join(config.package_root, link.toId, ep);
+            scopes[n.id][name + '/'] = join(config.package_root, link.toId, '/');
           }
         });
       });
@@ -82,7 +88,7 @@ export default {
 
     await Promise.all(addScopes);
 
-    const extractPackages = Object.keys(scopes).map(async (pkg: string) => {
+    const extractPackages = Object.keys(scopes).map(async (pkg: string): Promise<void> => {
       const packagePath = filesystem.path(config.package_path, pkg);
 
       print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
@@ -91,7 +97,7 @@ export default {
 
     await Promise.all(extractPackages);
 
-    const map = {
+    const map: ImportMap = {
       imports: {
         ...importmap.imports,
         ...imports
@@ -102,8 +108,8 @@ export default {
       }
     };
 
-    print.success(`Writing importmap to ${importmapPath}`);
-    await filesystem.writeAsync(importmapPath, map);
+    print.success(`Writing importmap`);
+    await writeImportmap(map, config);
 
     time.done();
   }

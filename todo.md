@@ -7,6 +7,7 @@
 - [ ] `--clean`?
 - [ ] Rollup plugins?
   - [x] `--optimize`
-- [ ] Config list of `package.json` entry points. `--strict`
-- [ ] Config for bundle output (extension).
+- [ ] Config list of `package.json` entry points.
+- [ ] `--strict`
+- [ ] Config for bundle output (filename, file extension).
 - [ ] Do something for peers

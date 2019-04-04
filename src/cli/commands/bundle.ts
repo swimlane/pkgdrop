@@ -1,15 +1,11 @@
 import { GluegunToolbox } from 'gluegun';
-import { rollup } from 'rollup';
 import { manifest } from 'pacote';
 import { join } from 'path';
-import { terser } from 'rollup-plugin-terser';
 
-const outputOptions = {
-  format: 'esm' as 'esm',
-  sourcemap: true,
-  exports: 'named' as 'named',
-  chunkFileNames: 'common/[name]-[hash].js'
-};
+import {
+  AirdropOptions, PackageInfo,
+  readImportmap, genererateBundle
+} from '../../utils/';
 
 export default {
   name: 'bundle',
@@ -21,53 +17,16 @@ export default {
     const { parameters, print, config: { airdrop }, filesystem, timer } = toolbox;
     const time = timer.start();
 
-    const config = airdrop;
+    const config = airdrop as AirdropOptions;
 
     const packages = parameters.array.filter(Boolean);
-    const force = parameters.options.force || false;
-    const optimize = parameters.options.optimize || false;
 
-    const importmapPath = filesystem.path(config.package_path, 'importmap.json');
-
-    print.info(`Reading existing importmap from ${importmapPath}`);
-    const importmap = (await filesystem.readAsync(importmapPath, 'json')) || {};
-
-    importmap.imports = importmap.imports || {};
-    importmap.scopes = importmap.scopes || {};
-
-    const resolve = () => ({
-      async resolveId(importee: string, importer: string) {
-        if ( /\0/.test( importee ) ) return null;
-        if ( !importer ) return null;
-
-        const basedir = filesystem.path(config.package_path);
-    
-        importer = importer.replace(basedir, '');
-    
-        const firstIndex = importer.indexOf('/');
-        const secondIndex = importer.indexOf('/', firstIndex + 1);
-        const scope = importer.slice(firstIndex + 1, secondIndex);
-
-        if (!importmap.scopes[scope]) {
-          return;
-        }
-    
-        const scopes = importmap.scopes[scope];
-    
-        for (const s in scopes) {
-          if (importee.startsWith(s)) {
-            const im = importee.replace(s, scopes[s]).replace(config.package_root, '');
-            return filesystem.path(config.package_path, im);
-          }
-        }
-        
-        return;
-      }
-    });
+    print.info(`Reading existing importmap`);
+    const importmap = await readImportmap(config);
 
     const buildBundles = packages.map(async (pkg: string) => {
       print.info(`Fetching package info for ${pkg}`);
-      const pkgInfo = await manifest(pkg, {
+      const pkgInfo: PackageInfo = await manifest(pkg, {
         'full-metadata': true
       });
 
@@ -78,25 +37,13 @@ export default {
 
       const packagePath = filesystem.path(config.package_path, packageName, entryPoint);
 
-      if (!force && filesystem.exists(outputPath)) {
+      if (!config.force && filesystem.exists(outputPath)) {
         print.warning(`Bundle already exists at ${outputPath}, skipping`);
         return;
       }
 
       print.info(`Bundling ${packageName}`);
-
-      const inputOptions = {
-        input: [packagePath],
-        plugins: [
-          resolve(),
-          optimize && terser()
-        ]
-      };
-
-      const packageBundle = await rollup(inputOptions as any);
-      const out = await packageBundle.generate(outputOptions);
-
-      const { code } = out.output[0];
+      const code = await genererateBundle(packagePath, importmap, config);
 
       print.success(`Writing bundle for ${packageName}`);
       await filesystem.writeAsync(outputPath, code);

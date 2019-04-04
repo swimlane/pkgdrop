@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",
+    "fs-jetpack": "^2.2.2",
     "gluegun": "^3.0.0",
     "ngraph.graph": "0.0.18",
     "npmgraphbuilder": "^2.2.0",

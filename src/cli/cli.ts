@@ -33,10 +33,10 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
         const optimize = parameters.options.optimize ? '--optimize' : '';
 
         print.info('Adding packages');
-        await cli.run(`a ${parameters.string} ${force}`);
+        await cli.run(`add ${parameters.string} ${force}`.trim());
 
         print.info('Bundling packages');
-        await cli.run(`b ${parameters.string} ${force} ${optimize}`);
+        await cli.run(`bundle ${parameters.string} ${force} ${optimize}`.trim());
       }
     })
     .create();
