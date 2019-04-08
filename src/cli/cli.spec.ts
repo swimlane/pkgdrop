@@ -107,28 +107,28 @@ describe('cli tests', () => {
     let output;
 
     beforeAll(async () => {
-      output = await system.exec(`${binFile} bundle lit-element@2.1.0`);
+      output = await system.exec(`${binFile} bundle d3@5.9.2`);
       output = output.replace(colorsRe, '').replace(doneRe, '');
-    });
+    }, 10000);
 
     test('displays console messages', async () => {
       expect(output).toMatchSnapshot();
     });
 
     test('files exist', async () => {
-      expect(await jetpack.exists(join(testPath, 'lit-element@2.1.0.bundle.js'))).toBe('file');
+      expect(await jetpack.exists(join(testPath, 'd3@5.9.2.bundle.js'))).toBe('file');
     });
 
     test('can\'t bundle again', async () => {
-      const out = await system.exec(`${binFile} bundle lit-element@2.1.0`);
+      const out = await system.exec(`${binFile} bundle d3@5.9.2`);
       expect(out).toContain('Bundle already exists at');
       expect(out).toContain('skipping');
-    });
+    }, 10000);
 
     test('can force', async () => {
-      let out = await system.exec(`${binFile} bundle lit-element@2.1.0 --force`);
+      let out = await system.exec(`${binFile} bundle d3@5.9.2 --force`);
       out = output.replace(colorsRe, '').replace(doneRe, '');
       expect(out).toMatchSnapshot();
-    });
+    }, 10000);
   });
 });

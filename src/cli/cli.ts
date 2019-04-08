@@ -24,21 +24,6 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
         info(`  Type ${brand} --help for more info`)
       }
     })
-    .command({
-      name: 'add-bundle',
-      alias: ['ab'],
-      run: async (toolbox: GluegunToolbox) => {
-        const { parameters, print } = toolbox;
-        const force = parameters.options.force ? '--force' : '';
-        const optimize = parameters.options.optimize ? '--optimize' : '';
-
-        print.info('Adding packages');
-        await cli.run(`add ${parameters.string} ${force}`.trim());
-
-        print.info('Bundling packages');
-        await cli.run(`bundle ${parameters.string} ${force} ${optimize}`.trim());
-      }
-    })
     .create();
 
   return cli.run(argv);

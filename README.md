@@ -31,7 +31,7 @@ airdrop add <package> [--force]
 
 Packages added using `airdrop add <package>` will be downloaded into a `/<path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
 
-For example, running `airdrop add lit-element` will result in a root directory structure of:
+For example, running `airdrop add lit-element@2.0.1` will result in a root directory structure of:
 
 ```
 <path>
@@ -51,19 +51,17 @@ airdrop bundle <package> [--force] [--optimize]
 * `--force`: force airdrop to bundle packages that have already been bundle.
 * `--optimize`: minify the generated bundle.
 
-The command will bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<path>` directory.  The import-map is not updated when bundling.
+The command will add and bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<path>` directory.  The import-map will be updated to import resolve `<name>@<version>` to the bundle.
 
-For example, running `airdrop bundle lit-element` will result in a root directory structure of:
+For example, running `airdrop bundle d3d3@5.9.2` will result in a root directory structure of:
 
 ```
 <path>
-├── lit-element@2.0.1/
-├── lit-html@1.0.0/
-├── lit-element@2.0.1.bundle.js
+├── <d3 deps>
+├── d3d3@5.9.2/
+├── d3d3@5.9.2.bundle.js
 └── importmap.json
 ```
-
-> This command requires that the package has already been added using the `add` command.  Use the `add-bundle` command to add and bundle in one step.
 
 ## In browser usage
 
@@ -126,30 +124,14 @@ While most modern browsers include support for ES modules, bare package specifie
 
 ### Bundles
 
-Bundles can be used without the need for an import map.
+Bundles can also be imported using bare imports.
 
 ```html
-<script type="module">
-  import { LitElement, html, css } from '/-/lit-element@2.1.0.bundle.js';
-
-  class MyElement extends LitElement {
-  
-    static get properties() {
-      return {
-        mood: {type: String}
-      }
-    }
-    
-    static get styles() {
-      return css`.mood { color: green; }`;
-    }
-  
-    render() {
-      return html`Web Components are <span class="mood">${this.mood}</span>!`;
-    }
-  }
-
-  customElements.define('my-element', MyElement);
+<script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
+<script type="importmap-shim" src="/-/importmap.json"></script>
+<script type="module-shim">
+    import * as d3 from 'd3@5.9.2';
+    d3.select('#hello').text('Hello World!!');
 </script>
 ```
 
