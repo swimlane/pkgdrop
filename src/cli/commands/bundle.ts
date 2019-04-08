@@ -1,13 +1,11 @@
-import { GluegunToolbox } from 'gluegun';
 import { manifest } from 'pacote';
 import { join } from 'path';
 
 import {
-  AirdropOptions, PackageInfo,
+  PackageInfo,
   readImportmap, genererateBundle
 } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
-
 
 export default {
   name: 'bundle',

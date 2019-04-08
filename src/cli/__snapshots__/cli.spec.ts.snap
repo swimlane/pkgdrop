@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cli tests add can force 1`] = `
+"Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0 to /Users/jmh/workspace/projects/airdrop-cli/test/-/lit-element@2.1.0
+Extracting tarball for lit-html@1.0.0 to /Users/jmh/workspace/projects/airdrop-cli/test/-/lit-html@1.0.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add displays console messages 1`] = `
+"Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0 to /Users/jmh/workspace/projects/airdrop-cli/test/-/lit-element@2.1.0
+Extracting tarball for lit-html@1.0.0 to /Users/jmh/workspace/projects/airdrop-cli/test/-/lit-html@1.0.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+    },
+    \\"lit-html@1.0.0\\": {}
+  }
+}"
+`;
+
+exports[`cli tests bundle can force 1`] = `
+"Reading existing importmap
+Fetching package info for lit-element@2.1.0
+Bundling lit-element@2.1.0
+Writing bundle for lit-element@2.1.0
+Done! "
+`;
+
+exports[`cli tests bundle displays console messages 1`] = `
+"Reading existing importmap
+Fetching package info for lit-element@2.1.0
+Bundling lit-element@2.1.0
+Writing bundle for lit-element@2.1.0
+Done! "
+`;
+
+exports[`cli tests init displays console messages 1`] = `
+"airdrop.config.js already exists at /Users/jmh/workspace/projects/airdrop-cli/test, skipping
+Done! "
+`;
+
+exports[`cli tests resolve displays console messages 1`] = `"/-/lit-element@2.1.0/lit-element.js"`;
+
+exports[`cli tests resolve displays console messages 2`] = `"/-/lit-element@1.0.0/lit-element.js"`;

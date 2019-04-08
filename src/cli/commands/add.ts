@@ -1,4 +1,3 @@
-import { GluegunToolbox } from 'gluegun';
 import { manifest, extract } from 'pacote';
 import { get } from 'http';
 import { stringify } from 'querystring';
@@ -57,9 +56,11 @@ export default {
       }
 
       const entryPoint = pkgInfo.module || pkgInfo.main || 'index.js';
-      const outputPath = join(airdrop.package_root, pkgId, entryPoint);
+      const outputPath = join(airdrop.package_root, pkgId, '/');
+      const entryPath = join(outputPath, entryPoint);
 
-      imports[pkgId] = outputPath;
+      imports[pkgId] = entryPath;
+      imports[pkgId + '/'] = outputPath;
 
       print.info(`Fetching dependecy tree for ${pkgId}`);
 
