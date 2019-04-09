@@ -4,4 +4,6 @@ export interface AirdropOptions {
 
   force: boolean;
   optimize: boolean;
+  clean: boolean;
+  bundle: boolean;
 }

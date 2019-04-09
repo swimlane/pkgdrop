@@ -1,7 +1,7 @@
 import { manifest, extract } from 'pacote';
 import { join } from 'path';
 
-import { PackageInfo } from '../../lib/';
+import { PackageInfo, readImportmap, Imports } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 
 export default {
@@ -21,12 +21,27 @@ export default {
       });
 
       // TODO: Check import map and file system
+      const importmap = await readImportmap(airdrop);
    
       const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
-      const entryPoint = pkgInfo.module || pkgInfo.main || 'index.js';
-      const outputPath = join(airdrop.package_root, pkgId, entryPoint);
 
-      print.info(outputPath);
+      let res = resoleId(pkgId, importmap.imports);
+
+      if (!res) {
+        res = 'Not found!'
+      }
+
+      print.info(res);
     }
   }
 };
+
+function resoleId(id: string, scope: Imports) {
+  const paths = Object.keys(scope).sort((a, b) => b.length - a.length);
+
+  for (const s of paths) {
+    if (id.startsWith(s)) {
+      return id.replace(s, scope[s]);
+    }
+  }
+}

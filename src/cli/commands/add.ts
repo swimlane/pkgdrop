@@ -4,6 +4,8 @@ import { stringify } from 'querystring';
 import { join } from 'path';
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
+import { bundlePackages } from './bundle';
+import * as deepmerge from 'deepmerge';
 
 import {
   PackageInfo, Scopes, Imports, ImportMap,
@@ -25,40 +27,48 @@ export default {
   name: 'add',
   alias: ['a'],
   description: 'Adds a new package',
-  hidden: false,
+  hidden: true,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, airdrop, filesystem, timer } = toolbox;
+    const { parameters, print, airdrop, timer, filesystem } = toolbox;
     const time = timer.start();
+
+    if (airdrop.clean) {
+      const p = filesystem.path(airdrop.package_path);
+      if (p) {
+        print.info(`Cleaning output directory`);
+        await filesystem.remove(p);
+      }
+    }
 
     const packages = parameters.array.filter(Boolean);
 
-    print.info(`Reading existing importmap`);
-    const importmap = await readImportmap(airdrop);
+    if (packages.length) {
+      print.info(`Reading existing importmap`);
+      const inputImportmap = await readImportmap(airdrop);
 
-    const _importMap = await addPackages(packages, importmap, toolbox);
+      let addedImportmap = await addPackages(packages, inputImportmap, toolbox);
 
-    const map: ImportMap = {
-      imports: {
-        ...importmap.imports,
-        ..._importMap.imports
-      },
-      scopes: {
-        ...importmap.scopes,
-        ..._importMap.scopes
+      if (airdrop.bundle) {
+        addedImportmap = await bundlePackages(packages, deepmerge(inputImportmap, addedImportmap), toolbox);
       }
-    };
 
-    print.success(`Writing importmap`);
-    await writeImportmap(map, airdrop);
+      if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
+        print.success(`Writing importmap`);
+        await writeImportmap(deepmerge(inputImportmap, addedImportmap), airdrop);
+      } else {
+        print.warning(`No changes to importmap`);
+      }
+    } else {
+      print.info(`No packages specified`);
+    }
 
     time.done();
   }
 };
 
-export async function addPackages(packages: string[], importmap: ImportMap, toolbox: AirdropToolbox) {
-  const { print, airdrop, filesystem } = toolbox;
-
+export async function getMap(packages: string[], importmap: ImportMap, toolbox: AirdropToolbox) {
+  const { print, airdrop } = toolbox;
   const { createNpmDependenciesGraph } = buildGraph(httpClient, 'http://registry.npmjs.org/');
 
   const imports: Imports = {};
@@ -67,9 +77,15 @@ export async function addPackages(packages: string[], importmap: ImportMap, tool
   const addScopes = packages.map(async (pkg) => {
     print.info(`Fetching package information for ${pkg}`);
 
-    const pkgInfo: PackageInfo = await manifest(pkg, {
-      'full-metadata': true
-    });
+    let pkgInfo: PackageInfo;
+    try {
+      pkgInfo = await manifest(pkg, {
+        'full-metadata': true
+      });      
+    } catch (e) {
+      print.warning(`Package ${pkg} not found, skipping`);
+      return;
+    }
 
     const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
 
@@ -111,7 +127,18 @@ export async function addPackages(packages: string[], importmap: ImportMap, tool
 
   await Promise.all(addScopes);
 
-  const extractPackages = Object.keys(scopes).map(async (pkg: string): Promise<void> => {
+  return {
+    imports,
+    scopes
+  }
+}
+
+export async function addPackages(packages: string[], importmap: ImportMap, toolbox: AirdropToolbox) {
+  const { print, airdrop, filesystem } = toolbox;
+
+  const map = await getMap(packages, importmap, toolbox);
+
+  const extractPackages = Object.keys(map.scopes).map(async (pkg: string): Promise<void> => {
     const packagePath = filesystem.path(airdrop.package_path, pkg);
 
     print.info(`Extracting tarball for ${pkg} to ${packagePath}`);
@@ -120,10 +147,7 @@ export async function addPackages(packages: string[], importmap: ImportMap, tool
 
   await Promise.all(extractPackages);
 
-  return {
-    imports,
-    scopes
-  }
+  return map;
 }
 
 function httpClient(url: string, data: string) {

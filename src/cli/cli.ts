@@ -1,4 +1,5 @@
 import { build, GluegunToolbox } from 'gluegun';
+import add from './commands/add';
 
 /**
  * Create the cli and kick it off
@@ -18,11 +19,8 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
       'patching'
     ])
     .defaultCommand({
-      run: async ({ print: { info }, meta: { version }, runtime: { brand } }: GluegunToolbox) => {
-        info(`${brand} version ${version()}`)
-        info(``)
-        info(`  Type ${brand} --help for more info`)
-      }
+      description: 'Adds a new package',
+      run: add.run
     })
     .create();
 

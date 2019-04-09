@@ -21,42 +21,37 @@ $ npm airdrop -g
 ### Adding Packages
 
 ```bash
-airdrop add <package> [--force]
+airdrop <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 ```
 
 * `<package>`: npm package (with optional version or tag) to add.
 * `--force`: force airdrop to add packages that have already been added.
+* `--bundle`: package bundled.
+* `--optimize`: minify the generated bundle.
+* `--clean`: clean output directory before adding new packages.
+* `--no-color`: disable CLI colors.
 
 > The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version `es-module-shims`.
 
-Packages added using `airdrop add <package>` will be downloaded into a `/<path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
+Packages added using `airdrop add <package>` will be downloaded into a `/<package_path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
 
 For example, running `airdrop add lit-element@2.0.1` will result in a root directory structure of:
 
 ```
-<path>
+<package_path>
 ├── lit-element@2.0.1/
 ├── lit-html@1.0.0/
 └── importmap.json
 ```
 
-> The `<path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps the address `<root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
+> The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps, the address `<package_root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
-### Bundling
+The the `--bundle` flag will add and bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<package_path>` directory.  The import-map will be updated to import resolve `<name>@<version>` to the bundle.
 
-```bash
-airdrop bundle <package> [--force] [--optimize]
-```
-
-* `--force`: force airdrop to bundle packages that have already been bundle.
-* `--optimize`: minify the generated bundle.
-
-The command will add and bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<path>` directory.  The import-map will be updated to import resolve `<name>@<version>` to the bundle.
-
-For example, running `airdrop bundle d3d3@5.9.2` will result in a root directory structure of:
+For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directory structure of:
 
 ```
-<path>
+<package_path>
 ├── <d3 deps>
 ├── d3d3@5.9.2/
 ├── d3d3@5.9.2.bundle.js
@@ -69,7 +64,7 @@ For example, running `airdrop bundle d3d3@5.9.2` will result in a root directory
 
 The added ES modules can be loaded in the browser using a absolute path and full version.
 
-- `/<root>/<name>@<version>(/file-path)?`
+- `/<package_root>/<name>@<version>(/file-path)?`
 
 ```html
 <script type="module">
@@ -124,7 +119,14 @@ While most modern browsers include support for ES modules, bare package specifie
 
 ### Bundles
 
-Bundles can also be imported using bare imports.
+Bundles can also be imported using fixed versions or bare imports.
+
+```html
+<script type="module">
+    import * as d3 from '/-/d3d3@5.9.2.bundle.js';
+    d3.select('#hello').text('Hello World!!');
+</script>
+```
 
 ```html
 <script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
