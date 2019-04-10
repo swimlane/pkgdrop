@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cli tests add --bundle can force 1`] = `
+"Reading existing importmap
+Fetching package info for d3@5.9.2
+Bundling d3@5.9.2
+Writing bundle for d3@5.9.2
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add can clean 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for lit-html@1.0.0
+Fetching dependecy tree for lit-html@1.0.0
+Extracting tarball for lit-html@1.0.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add can force 1`] = `
+"Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0
+Extracting tarball for lit-html@1.0.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add displays console messages 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0
+Extracting tarball for lit-html@1.0.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+    },
+    \\"lit-html@1.0.0\\": {}
+  }
+}"
+`;
+
+exports[`cli tests init displays console messages 1`] = `
+"Writing airdrop.config.js
+Done! "
+`;

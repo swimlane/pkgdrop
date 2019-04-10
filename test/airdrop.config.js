@@ -1,4 +1,4 @@
 module.exports = {
-  package_path: './-/',
-  package_root: '/-/'
+package_path: './-/',
+package_root: '/-/'
 }

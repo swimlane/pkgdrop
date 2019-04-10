@@ -15,7 +15,7 @@ export default {
     const configPath = filesystem.path('airdrop.config.js');
 
     if (!force && filesystem.exists(configPath)) {
-      print.warning(`airdrop.config.js already exists at ${filesystem.cwd()}, skipping`);
+      print.warning('airdrop.config.js already exists, skipping');
     } else {
       const code = 'module.exports = {\npackage_path: \'./-/\',\npackage_root: \'/-/\'\n}';
       print.info(`Writing airdrop.config.js`);

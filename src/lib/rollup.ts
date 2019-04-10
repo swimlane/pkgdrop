@@ -5,6 +5,7 @@ import { join } from 'path';
 
 import { ImportMap } from './importmaps';
 import { AirdropOptions } from './airdrop';
+import { createResolver } from './resolver';
 
 export async function genererateBundle(packagePath: string, importmap: ImportMap, options: AirdropOptions): Promise<string> {
     const outputOptions: OutputOptions = {
@@ -32,8 +33,8 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
     return {
       name: 'airdrop-resolve',
       resolveId(importee: string, importer: string) {
-        if ( /\0/.test( importee ) ) return null;
-        if ( !importer ) return null;
+        if ( /\0/.test( importee ) ) return;
+        if ( !importer ) return;
   
         const basedir = jetpack.path(options.package_path);
         importer = importer.replace(basedir, '');
@@ -41,22 +42,15 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
         const firstIndex = importer.indexOf('/');
         const secondIndex = importer.indexOf('/', firstIndex + 1);
         const scope = importer.slice(firstIndex + 1, secondIndex);
-  
+
         if (!importmap.scopes[scope]) return;
-    
-        const scopes = importmap.scopes[scope];
   
-        // Sort by length to get more specific path first
-        const paths = Object.keys(scopes).sort((a, b) => b.length - a.length);
-  
-        for (const s of paths) {
-          if (importee.startsWith(s)) {
-            const im = importee.replace(s, scopes[s]).replace(options.package_root, '');
-            return join(basedir, im);
-          }
-        }
-        
-        return;
+        const resolveId = createResolver(importmap.scopes[scope]);
+        const resolved = resolveId(importee);
+
+        if (!resolved) return;
+
+        return join(basedir, resolved.replace(options.package_root, ''));
       }
     }
   }

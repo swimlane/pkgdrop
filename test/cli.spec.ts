@@ -61,7 +61,7 @@ describe('cli tests', () => {
 
     test('can\'t init again', async () => {
       const out = await execAirdrop(`init`);
-      expect(out).toContain('airdrop.config.js already exists at');
+      expect(out).toContain('airdrop.config.js already exists');
       expect(out).toContain('skipping');
     });
   });
@@ -114,8 +114,11 @@ describe('cli tests', () => {
       output = await execAirdrop(`add d3@5.9.2 --bundle`);
     }, 30000);
 
-    test('displays console messages', async () => {
-      expect(output).toMatchSnapshot();
+    test('displays console messages', () => {
+      expect(output).toContain('Reading existing importmap');
+      expect(output).toContain('Fetching package information for d3@5.9.2');
+      expect(output).toContain('Bundling d3@5.9.2');
+      expect(output).toContain('Writing importmap');
     });
 
     test('files exist', async () => {

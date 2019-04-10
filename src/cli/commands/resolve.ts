@@ -1,7 +1,6 @@
-import { manifest, extract } from 'pacote';
-import { join } from 'path';
+import { manifest } from 'pacote';
 
-import { PackageInfo, readImportmap, Imports } from '../../lib/';
+import { PackageInfo, readImportmap, createResolver } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 
 export default {
@@ -15,33 +14,21 @@ export default {
 
     const packages = parameters.array.filter(Boolean);
 
+    // TODO: Check file system?
+    const { imports } = await readImportmap(airdrop);
+    const resolveId = createResolver(imports);    
+
     for (const pkg of packages) {
-      const pkgInfo: PackageInfo = await manifest(pkg, {
-        'full-metadata': true
-      });
-
-      // TODO: Check import map and file system
-      const importmap = await readImportmap(airdrop);
-   
+      const pkgInfo: PackageInfo = await manifest(pkg);
       const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
-
-      let res = resoleId(pkgId, importmap.imports);
+      const res = resolveId(pkgId);
 
       if (!res) {
-        res = 'Not found!'
+        print.warning('Not found!');
+        return;
       }
 
       print.info(res);
     }
   }
 };
-
-function resoleId(id: string, scope: Imports) {
-  const paths = Object.keys(scope).sort((a, b) => b.length - a.length);
-
-  for (const s of paths) {
-    if (id.startsWith(s)) {
-      return id.replace(s, scope[s]);
-    }
-  }
-}
