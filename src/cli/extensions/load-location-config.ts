@@ -1,5 +1,5 @@
 import { GluegunToolbox } from 'gluegun';
-import * as cosmiconfig from 'cosmiconfig'
+import * as cosmiconfig from 'cosmiconfig';
 
 import { AirdropOptions } from '../../lib/';
 

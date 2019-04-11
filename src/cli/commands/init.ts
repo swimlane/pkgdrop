@@ -1,4 +1,5 @@
 import { GluegunToolbox } from 'gluegun';
+import * as cosmiconfig from 'cosmiconfig';
 
 export default {
   name: 'init',
@@ -7,20 +8,57 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, filesystem, timer } = toolbox;
+    const { print, filesystem, timer, getAirdropOptions, prompt } = toolbox;
     const time = timer.start();
 
-    const force = parameters.options.force || false;
+    const options = await getAirdropOptions();
+    const configPath = filesystem.path(options.config || 'airdrop.config.js');
 
-    const configPath = filesystem.path('airdrop.config.js');
+    const config = {
+      package_path: './-/',
+      package_root: '/-/',
+    };
 
-    if (!force && filesystem.exists(configPath)) {
-      print.warning('airdrop.config.js already exists, skipping');
-    } else {
-      const code = 'module.exports = {\npackage_path: \'./-/\',\npackage_root: \'/-/\'\n}';
-      print.info(`Writing airdrop.config.js`);
-      await filesystem.writeAsync(configPath, code);      
+    try {
+      const res = await cosmiconfig().load(configPath);
+      Object.assign(config, res.config);
+    } catch (e) {
+      // noop
     }
+
+    let code;
+    if (!options.y) {
+      const askPath = {
+        type: 'input',
+        name: 'package_path',
+        initial: config.package_path,
+        message: 'Package path: '
+      };
+
+      const askRoot = {
+        type: 'input',
+        name: 'package_root',
+        initial: config.package_root,
+        message: 'Package root: '
+      };
+
+      const response = await prompt.ask([askPath, askRoot]);
+      Object.assign(config, response);
+      
+      code = 'module.exports = ' + JSON.stringify(config, null, 2);
+
+      print.newline();
+      print.info(code);
+      if (await toolbox.prompt.confirm('Is this OK?') === false) {
+        print.warning('Aborting');
+        return;
+      }
+    } else {
+      code = 'module.exports = ' + JSON.stringify(config, null, 2);
+    }
+
+    print.info(`Writing airdrop.config.js`);
+    await filesystem.writeAsync(configPath, code);
 
     time.done();
   }
