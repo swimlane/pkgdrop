@@ -7,15 +7,14 @@ import { print, filesystem } from 'gluegun';
 import { ImportMap, AirdropOptions } from '../../lib/';
 
 export async function addPackages(map: ImportMap, options: AirdropOptions) {
-  const extractPackages = Object.keys(map.scopes).map(async (pkg: string): Promise<void> => {
-    const packagePath = filesystem.path(options.package_path, pkg);
-
-    print.info(`Extracting tarball for ${pkg}`);
-    return extract(pkg, packagePath);
-  });
-
-  await Promise.all(extractPackages);
-
+  const packages = Object.keys(map.scopes);
+  await Promise.all(packages.map(pkg => addPackage(pkg, options)));
   return map;
 }
-  
+
+async function addPackage(pkg: string, options: AirdropOptions) {
+  const packagePath = filesystem.path(options.package_path, pkg);
+  print.info(`Extracting tarball for ${pkg}`);
+  await extract(pkg, packagePath);
+  return pkg;
+}
