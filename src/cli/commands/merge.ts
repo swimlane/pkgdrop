@@ -22,7 +22,7 @@ class CollectStream extends stream.Transform {
 export default {
   name: 'merge',
   alias: ['m'],
-  description: 'Unpacks a tarball to the putput directory, merging the existing import map.',
+  description: 'Unpacks a tarball to the output directory, merging the existing import map.',
   hidden: false,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {

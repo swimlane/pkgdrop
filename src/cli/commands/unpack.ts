@@ -6,7 +6,7 @@ import { cleanPackagePath } from '../shared';
 export default {
   name: 'unpack',
   alias: ['u'],
-  description: 'Unpacks a tarball to the putput directory, overwriting the existing import map.',
+  description: 'Unpacks a tarball to the output directory, overwriting the existing import map.',
   hidden: false,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {

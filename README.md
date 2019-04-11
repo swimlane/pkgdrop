@@ -58,6 +58,18 @@ For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directo
 └── importmap.json
 ```
 
+### Other commands
+
+- `airdrop init` - Adds an `airdrop.config.js` to the current directory
+- `airdrop version` - Output the version number
+- `airdrop config` - Displays current configuration
+- `airdrop clean` - Cleans the output directory
+- `airdrop resolve <package>` - Prints the resolved url for package(s)
+- `airdrop bundle <package>` - Bundles existing package(s)
+- `airdrop pack` - Create a tarball from the <package_path> directory
+- `airdrop unpack <filename> [--clean]` - Unpacks a tarball to the <package_path> directory, overwriting the existing import map.
+- `airdrop merge <filename>` - Unpacks a tarball to the <package_path> directory, merging the existing import map.
+
 ## In browser usage
 
 ### Fixed Versions
