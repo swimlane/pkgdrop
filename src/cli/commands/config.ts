@@ -5,8 +5,8 @@ import { getMap, addPackages, bundlePackages } from '../shared';
 export default {
   name: 'config',
   alias: ['c'],
-  description: 'Dispays current config',
-  hidden: true,
+  description: 'Dispays current configuration',
+  hidden: false,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
     const { print, getAirdropOptions } = toolbox;

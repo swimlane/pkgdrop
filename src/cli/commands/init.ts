@@ -3,7 +3,7 @@ import { GluegunToolbox } from 'gluegun';
 export default {
   name: 'init',
   alias: ['i'],
-  description: 'Adds a airdrop.config.js to the cwd',
+  description: 'Adds a airdrop.config.js to the current directory',
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {

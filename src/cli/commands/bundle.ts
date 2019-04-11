@@ -5,7 +5,7 @@ import { bundlePackages } from '../shared';
 export default {
   name: 'bundle',
   alias: ['b'],
-  description: 'Bundles an existing package',
+  description: 'Bundles existing package(s)',
   hidden: false,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {

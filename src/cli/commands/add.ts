@@ -1,11 +1,11 @@
 import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
-import { getMap, addPackages, bundlePackages } from '../shared';
+import { getMap, addPackages, bundlePackages, cleanPackagePath } from '../shared';
 
 export default {
   name: 'add',
   alias: ['a'],
-  description: 'Adds a new package',
+  description: 'Adds new package(s) from npm',
   hidden: true,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
@@ -14,13 +14,7 @@ export default {
 
     const options = await getAirdropOptions();
 
-    if (options.clean) {
-      const p = filesystem.path(options.package_path);
-      if (p) {
-        print.info(`Cleaning output directory`);
-        await filesystem.remove(p);
-      }
-    }
+    if (options.clean) cleanPackagePath(options);
 
     const packages = parameters.array.filter(Boolean);
 
