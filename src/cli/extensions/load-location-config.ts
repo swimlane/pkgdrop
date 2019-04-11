@@ -10,7 +10,7 @@ export interface AirdropToolbox extends GluegunToolbox {
   http: null;
   template: null;
   patching: null;
-  airdrop: AirdropOptions;
+  getAirdropOptions: () => Promise<AirdropOptions>;
 };
 
 export default async (toolbox: GluegunToolbox) => {
@@ -20,19 +20,19 @@ export default async (toolbox: GluegunToolbox) => {
   options.optimize = options.optimize || false;
   options.optimize = options.bundle || false;
 
-  let local: any = {};
-  if (options.config) {
-    const res = await cosmiconfig().load(filesystem.path(options.config));
-    local = res.config;
-  } else {
-    local = config.loadConfig(brand, filesystem.cwd());
+  toolbox.getAirdropOptions = async function  getAirdropOptions(): Promise<AirdropOptions> {
+    let local: any = {};
+    if (options.config) {
+      const res = await cosmiconfig().load(filesystem.path(options.config));
+      local = res.config;
+    } else {
+      local = config.loadConfig(brand, filesystem.cwd());
+    }
+  
+    return {
+      ...config.airdrop,  // defaults
+      ...local,           // local
+      ...options          // command line
+    };
   }
-
-  const airdropConfig: AirdropOptions = {
-    ...config.airdrop,  // defaults
-    ...local,           // local
-    ...options          // command line
-  };
-
-  toolbox.airdrop = config.airdrop = airdropConfig;
 }

@@ -28,10 +28,9 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
     return out.output[0].code;
   }
   
-  // TODO: check if file exists?
   function airdropResolverPlugin(importmap: ImportMap, options: AirdropOptions): Plugin {
     return {
-      name: 'airdrop-resolve',
+      name: 'airdrop-rollup',
       resolveId(importee: string, importer: string) {
         if ( /\0/.test( importee ) ) return;
         if ( !importer ) return;

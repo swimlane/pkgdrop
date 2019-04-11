@@ -10,12 +10,14 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, airdrop } = toolbox;
+    const { parameters, print, getAirdropOptions } = toolbox;
+
+    const options = await getAirdropOptions();
 
     const packages = parameters.array.filter(Boolean);
 
     // TODO: Check file system?
-    const { imports } = await readImportmap(airdrop);
+    const { imports } = await readImportmap(options);
     const resolveId = createResolver(imports);    
 
     for (const pkg of packages) {

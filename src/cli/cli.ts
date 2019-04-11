@@ -8,7 +8,6 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
   // create a CLI runtime
   const cli = build('airdrop')
     .src(__dirname)
-    .help()
     .version()
     .exclude([
       'semver',
@@ -20,7 +19,8 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
     ])
     .defaultCommand({
       description: 'Adds a new package',
-      run: add.run
+      run: add.run,
+      hidden: true
     })
     .create();
 

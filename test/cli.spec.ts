@@ -27,12 +27,12 @@ describe('cli tests', () => {
 
   describe('meta commands', () => {
     test('displays the version number', async () => {
-      const out = await execAirdrop(`--version`);
+      const out = await execAirdrop(`version`);
       expect(out).toBe('1.0.0');
     });
 
     test('displays help', async () => {
-      const out = await execAirdrop(`--help`);
+      const out = await execAirdrop(`help`);
       expect(out).toContain('airdrop version 1.0.0');
     });
 

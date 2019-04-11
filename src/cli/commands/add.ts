@@ -1,6 +1,4 @@
-import * as deepmerge from 'deepmerge';
-
-import { readImportmap, writeImportmap } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 import { getMap, addPackages, bundlePackages } from '../shared';
 
@@ -11,11 +9,13 @@ export default {
   hidden: true,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, airdrop, timer, filesystem } = toolbox;
+    const { parameters, print, timer, filesystem, getAirdropOptions } = toolbox;
     const time = timer.start();
 
-    if (airdrop.clean) {
-      const p = filesystem.path(airdrop.package_path);
+    const options = await getAirdropOptions();
+
+    if (options.clean) {
+      const p = filesystem.path(options.package_path);
       if (p) {
         print.info(`Cleaning output directory`);
         await filesystem.remove(p);
@@ -26,18 +26,18 @@ export default {
 
     if (packages.length) {
       print.info(`Reading existing importmap`);
-      const inputImportmap = await readImportmap(airdrop);
-      const map = await getMap(packages, inputImportmap, airdrop);
+      const inputImportmap = await readImportmap(options);
+      const map = await getMap(packages, inputImportmap, options);
 
-      let addedImportmap = await addPackages(map, airdrop);
+      let addedImportmap = await addPackages(map, options);
 
-      if (airdrop.bundle) {
-        addedImportmap = await bundlePackages(packages, deepmerge(inputImportmap, addedImportmap), airdrop);
+      if (options.bundle) {
+        addedImportmap = await bundlePackages(packages, mergeImportmaps(inputImportmap, addedImportmap), options);
       }
 
       if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
         print.success(`Writing importmap`);
-        await writeImportmap(deepmerge(inputImportmap, addedImportmap), airdrop);
+        await writeImportmap(mergeImportmaps(inputImportmap, addedImportmap), options);
       } else {
         print.warning(`No changes to importmap`);
       }

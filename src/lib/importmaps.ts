@@ -27,3 +27,12 @@ export async function writeImportmap(map: ImportMap, options: { package_path: st
   const importmapPath = jetpack.path(options.package_path, 'importmap.json');
   await jetpack.writeAsync(importmapPath, map);
 }
+
+export function mergeImportmaps(...maps: ImportMap[]) {
+  const imports = Object.assign({}, ...maps.map(m => m.imports));
+  const scopes = Object.assign({}, ...maps.map(m => m.scopes));
+  return {
+    imports,
+    scopes
+  }
+}
