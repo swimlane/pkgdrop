@@ -48,7 +48,7 @@ describe('cli tests', () => {
     let output;
 
     beforeAll(async () => {
-      output = await execAirdrop(`init --offline`);
+      output = await execAirdrop(`init -y --offline`);
     });
 
     test('displays console messages', async () => {
@@ -59,11 +59,7 @@ describe('cli tests', () => {
       expect(await jetpack.exists('airdrop.config.js')).toBe('file');
     });
 
-    test('can\'t init again', async () => {
-      const out = await execAirdrop(`init`);
-      expect(out).toContain('airdrop.config.js already exists');
-      expect(out).toContain('skipping');
-    });
+    // TODO: Init again shouldn't change results
   });
 
   describe('add', () => {
@@ -72,7 +68,7 @@ describe('cli tests', () => {
     beforeAll(async () => {
       await execAirdrop(`init`);
       output = await execAirdrop(`add lit-element@2.1.0 --clean`);
-    });
+    }, 80000);
 
     test('displays console messages', async () => {
       expect(output).toMatchSnapshot();
