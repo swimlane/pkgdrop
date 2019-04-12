@@ -13,9 +13,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:setup": "npm run test:clean && npm run test:setup:pkgs && npm run test:setup:bundles",
-    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0",
-    "test:setup:bundles": "airdrop bundle d3@5.9.2 --optimize",
-    "test:clean": "rm -rf \"./test/-\""
+    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8",
+    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize",
+    "test:clean": "airdrop clean"
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",

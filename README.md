@@ -6,7 +6,7 @@ airdrop-cli
 ===========
 
 airdrop-cli is a package delivery tool for [npm](https://www.npmjs.com/) packages.
-Use it to download packages from npm to be loaded in the browser using native browser ES module loader with no connection to npm needed at runtime.
+Use it to download packages from npm to be loaded in the browser  with no connection to npm needed at runtime.
 
 ## Installation
 
@@ -58,17 +58,24 @@ For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directo
 └── importmap.json
 ```
 
+### Airdropping packages
+
+Adding packages requires a connection to npm regestry.  Once done an connection to npm is no longer required.  The `<package_path>` can be deployed with other frontend assets or copied to another machine.
+
+The following commands will help moving content from one system to another:
+
+- `airdrop pack` - Create a tarball from the `<package_path>` directory.
+- `airdrop unpack <filename> [--clean]` - Unpacks a tarball to the `<package_path>` directory, overwriting the existing import map.
+- `airdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the existing import map.
+
 ### Other commands
 
-- `airdrop init` - Adds an `airdrop.config.js` to the current directory
-- `airdrop version` - Output the version number
-- `airdrop config` - Displays current configuration
-- `airdrop clean` - Cleans the output directory
-- `airdrop resolve <package>` - Prints the resolved url for package(s)
-- `airdrop bundle <package>` - Bundles existing package(s)
-- `airdrop pack` - Create a tarball from the <package_path> directory
-- `airdrop unpack <filename> [--clean]` - Unpacks a tarball to the <package_path> directory, overwriting the existing import map.
-- `airdrop merge <filename>` - Unpacks a tarball to the <package_path> directory, merging the existing import map.
+- `airdrop init` - Adds an `airdrop.config.js` to the current directory.
+- `airdrop version` - Output the version number.
+- `airdrop config` - Displays current configuration.
+- `airdrop clean` - Cleans the output directory.
+- `airdrop resolve <package>` - Prints the resolved url for package(s).
+- `airdrop bundle <package>` - Bundles existing package(s).
 
 ## In browser usage
 
