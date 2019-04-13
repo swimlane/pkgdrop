@@ -27,17 +27,17 @@ describe('cli tests', () => {
 
   describe('meta commands', () => {
     test('displays the version number', async () => {
-      const out = await execAirdrop(`version`);
+      const out = await execAirdrop(`version --offline`);
       expect(out).toBe('1.0.0');
     });
 
     test('displays help', async () => {
-      const out = await execAirdrop(`help`);
+      const out = await execAirdrop(`help --offline`);
       expect(out).toContain('airdrop version 1.0.0');
     });
 
     test('--clean', async () => {
-      const out = await execAirdrop(`--clean`);
+      const out = await execAirdrop(`--clean --offline`);
       expect(out).toContain('Cleaning output directory');
       expect(out).toContain('No packages specified');
       expect(await existsAirdrop('importmap.json')).toBe(false);
@@ -48,7 +48,7 @@ describe('cli tests', () => {
     let output;
 
     beforeAll(async () => {
-      output = await execAirdrop(`init`);
+      output = await execAirdrop(`init --offline`);
     });
 
     test('displays console messages', async () => {
@@ -146,17 +146,17 @@ describe('cli tests', () => {
     }, 10000);
 
     test('displays resolved path', async () => {
-      const out = await execAirdrop(`resolve lit-element@2.1.0`);
+      const out = await execAirdrop(`resolve lit-element@2.1.0 --offline`);
       expect(out).toEqual('/-/lit-element@2.1.0/lit-element.js');
     });
 
     test('displays not found when not added', async () => {
-      const out = await execAirdrop(`resolve lit-element@1.0.0`);
+      const out = await execAirdrop(`resolve lit-element@1.0.0 --offline`);
       expect(out).toEqual('Not found!');
     });
 
     test('resolves to the bundle', async () => {
-      const out = await execAirdrop(`resolve d3@5.9.2`);
+      const out = await execAirdrop(`resolve d3@5.9.2 --offline`);
       expect(out).toEqual('/-/d3@5.9.2.bundle.js');
     });
   });
