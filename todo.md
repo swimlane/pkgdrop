@@ -1,13 +1,9 @@
 # Todo list
 
-- [x] Skip already installed packages
-- [x] Add `--force` to force already installed packages
-- [x] Add `init` to add config file to cwd
-- [-] `package.json` config for default adds/bundles?
-- [x] `--clean`?
 - [ ] Rollup plugins?
-  - [x] `--optimize`
-- [-] Config list of `package.json` entry points.
 - [ ] `--strict`
+  - [-] Config list of `package.json` entry points (main, module, browser)
 - [ ] Config for bundle output (filename, file extension).
 - [ ] Do something for peers
+- [ ] `airdrop add <rarball>`
+- [ ] `airdrop merge <folder>`

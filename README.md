@@ -6,7 +6,7 @@ airdrop-cli
 ===========
 
 airdrop-cli is a package delivery tool for [npm](https://www.npmjs.com/) packages.
-Use it to download packages from npm to be loaded in the browser  with no connection to npm needed at runtime.
+Use it to download packages from npm to be loaded in the browser with no external connection needed at runtime.
 
 ## Installation
 
@@ -24,18 +24,18 @@ $ npm airdrop -g
 airdrop <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 ```
 
-* `<package>`: npm package (with optional version or tag) to add.
-* `--force`: force airdrop to add packages that have already been added.
-* `--bundle`: package bundled.
-* `--optimize`: minify the generated bundle.
+* `<package>`: npm package(s) (with optional version or tag) to add.
+* `--force`: force add package(s) that have already been added.
+* `--bundle`: bundle the added package(s).
+* `--optimize`: minify the generated bundle(s).
 * `--clean`: clean output directory before adding new packages.
 * `--no-color`: disable CLI colors.
 
-> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version `es-module-shims`.
+> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
 
-Packages added using `airdrop add <package>` will be downloaded into a `/<package_path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
+Packages added using `airdrop <package>` will be downloaded into a `/<package_path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import map](https://github.com/WICG/import-maps) will also be added or updated.
 
-For example, running `airdrop add lit-element@2.0.1` will result in a root directory structure of:
+For example, running `airdrop lit-element@2.0.1` will result in a root directory structure of:
 
 ```
 <package_path>
@@ -44,9 +44,9 @@ For example, running `airdrop add lit-element@2.0.1` will result in a root direc
 └── importmap.json
 ```
 
-> The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import maps, the address `<package_root>` path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
+> The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import-maps, the package path is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
-The the `--bundle` flag will add and bundle the `<package>` package (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<package_path>` directory.  The import-map will be updated to import resolve `<name>@<version>` to the bundle.
+The the `--bundle` flag will add and bundle the `<package>` (and dependencies) into a esm bundle named `<name>@<version>.bundle.js` located in the `<package_path>` directory.  The import-map will be updated to resolve `<name>@<version>` to the bundle.
 
 For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directory structure of:
 
@@ -60,13 +60,13 @@ For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directo
 
 ### Airdropping packages
 
-Adding packages requires a connection to npm regestry.  Once done an connection to npm is no longer required.  The `<package_path>` can be deployed with other frontend assets or copied to another machine.
+Adding packages requires a connection to npm registry.  Once done an connection to npm is no longer required.  The `<package_path>` can be deployed with other assets or copied to a server.
 
 The following commands will help moving content from one system to another:
 
 - `airdrop pack` - Create a tarball from the `<package_path>` directory.
-- `airdrop unpack <filename> [--clean]` - Unpacks a tarball to the `<package_path>` directory, overwriting the existing import map.
-- `airdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the existing import map.
+- `airdrop unpack <filename> [--clean]` - Unpacks a tarball to the `<package_path>` directory, overwriting the existing import-map.
+- `airdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the packed import-map with the existing import-map.
 
 ### Other commands
 
@@ -87,7 +87,7 @@ The added ES modules can be loaded in the browser using a absolute path and full
 
 ```html
 <script type="module">
-  import { html, render } from '/-/lit-html@.1.0.0/lit-html.js';
+  import { html, render } from '/-/lit-html@1.0.0/lit-html.js';
 </script>
 ```
 
@@ -104,9 +104,9 @@ Or with the dynamic `import()`:
 
 ### Bare imports
 
-While most modern browsers include support for ES modules, bare package specifiers are explicitly forbidden.  In order to import bare package specifiers like `import "lit-html"` we need [import maps](https://github.com/WICG/import-maps).
+While most modern browsers include support for ES modules, bare package specifiers are explicitly forbidden.  In order to import bare package specifiers like `import "lit-html"` we need [import-maps](https://github.com/WICG/import-maps).
 
-> Note: Import maps are still an experimental specification.  Use [es-module-shims](https://github.com/guybedford/es-module-shims) to polyfill most of the newer modules specifications.  [SystemJS](https://github.com/systemjs/systemjs) also supports import maps.  However, `SystemJS` only loads `System.register` modules or AMD modules via extras.
+> Note: import-maps are still an experimental specification.  Use [es-module-shims](https://github.com/guybedford/es-module-shims) to polyfill most of the newer modules specifications.  [SystemJS](https://github.com/systemjs/systemjs) also supports import-maps.  However, `SystemJS` only loads `System.register` modules or AMD modules via extras.
 
 ```html
 <script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
