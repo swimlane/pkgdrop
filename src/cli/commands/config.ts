@@ -1,6 +1,4 @@
-import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
-import { getMap, addPackages, bundlePackages } from '../shared';
 
 export default {
   name: 'config',

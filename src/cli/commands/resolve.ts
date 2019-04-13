@@ -1,6 +1,4 @@
-import { manifest } from 'pacote';
-
-import { PackageInfo, readImportmap, createResolver } from '../../lib/';
+import { readImportmap, createResolver, expandLocalVersion } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 
 export default {
@@ -16,14 +14,12 @@ export default {
 
     const packages = parameters.array.filter(Boolean);
 
-    // TODO: Check file system?
     const { imports } = await readImportmap(options);
     const resolveId = createResolver(imports);    
 
     for (const pkg of packages) {
-      const pkgInfo: PackageInfo = await manifest(pkg);
-      const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
-      const res = resolveId(pkgId);
+      const pkgId = await expandLocalVersion(pkg, imports);
+      const res = pkgId && resolveId(pkgId);
 
       if (!res) {
         print.warning('Not found!');
