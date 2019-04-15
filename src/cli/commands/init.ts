@@ -2,7 +2,7 @@ import { GluegunToolbox } from 'gluegun';
 import * as cosmiconfig from 'cosmiconfig';
 import { dirname, join } from 'path';
 
-import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
+import { writeImportmap } from '../../lib/';
 
 export default {
   name: 'init',

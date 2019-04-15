@@ -6,11 +6,8 @@ import { manifest } from 'pacote';
 import { stringify } from 'querystring';
 import { join } from 'path';
 import { get } from 'http';
-import * as semver from 'semver';
 
 import { print } from 'gluegun'; 
-
-import { expandLocalVersion } from '../../lib/versions';
 
 interface PackageNode {
   id: string;

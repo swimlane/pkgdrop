@@ -7,7 +7,7 @@ export default {
   hidden: false,
   dashed: true,
   run: async (toolbox: AirdropToolbox) => {
-    const { print, timer, filesystem, getAirdropOptions } = toolbox;
+    const { timer, getAirdropOptions } = toolbox;
     const time = timer.start();
 
     const options = await getAirdropOptions();

@@ -2,7 +2,7 @@ import { join } from 'path';
 
 import { print, filesystem } from 'gluegun'; 
 
-import { ImportMap, Imports, PackageInfo, AirdropOptions, genererateBundle, getLocalManifest, expandLocalVersion } from '../../lib/';
+import { ImportMap, Imports, AirdropOptions, genererateBundle, getLocalManifest, expandLocalVersion } from '../../lib/';
 
 export async function bundlePackages(packages: string[], importmap: ImportMap, options: AirdropOptions): Promise<ImportMap> {
   const imports: Imports = {};

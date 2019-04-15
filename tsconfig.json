@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": false,
     "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "target": "es6",
+    "lib": ["es2016", "es2016.array.include", "scripthost"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./"
+    "outDir": "build",
+    "declaration": true,
+    "declarationDir": "build/types",
+    "strict": false,
+    "target": "es5",
+    "pretty": true,
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "pkg", "pkg-test"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/fixtures", "src/**/*.test.ts"]
 }
