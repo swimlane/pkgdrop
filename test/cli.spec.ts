@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { removeAsync, existsAsync, readAsync } from 'fs-jetpack';
 import * as execa from 'execa';
+import * as pkg from '../package.json';
 
 const testDir = join(process.cwd(), '/test');
 const testPath = join(testDir, '-/');
@@ -30,12 +31,12 @@ describe('cli tests', () => {
   describe('meta commands', () => {
     test('displays the version number', async () => {
       const out = await execAirdrop(`version --offline`);
-      expect(out).toBe('1.0.0');
+      expect(out).toBe(pkg.version);
     });
 
     test('displays help', async () => {
       const out = await execAirdrop(`help --offline`);
-      expect(out).toContain('airdrop version 1.0.0');
+      expect(out).toContain(`airdrop version ${pkg.version}`);
     });
 
     test('--clean', async () => {
