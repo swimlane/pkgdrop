@@ -6,7 +6,7 @@ export default {
   name: 'bundle',
   alias: ['b'],
   description: 'Bundles existing package(s)',
-  hidden: false,
+  hidden: true,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
     const { parameters, print, timer, getAirdropOptions } = toolbox;

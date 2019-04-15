@@ -8,14 +8,14 @@
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "prestart": "npm run test:setup",
     "start": "live-server ./test/",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:setup": "npm run test:clean && npm run test:setup:pkgs && npm run test:setup:bundles",
-    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8",
-    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize",
-    "test:clean": "airdrop clean"
+    "test:setup": "npm run test:setup:pkgs && npm run test:setup:bundles",
+    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --clean",
+    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize"
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",
@@ -39,7 +39,8 @@
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",
     "@types/supertest": "^2.0.5",
-    "jest": "^24.5.0",
+    "execa": "^1.0.0",
+    "jest": "^23.6.0",
     "nock": "^10.0.6",
     "prettier": "^1.14.2",
     "rimraf": "^2.6.2",

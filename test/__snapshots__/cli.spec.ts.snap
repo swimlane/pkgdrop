@@ -101,3 +101,36 @@ exports[`cli tests init file content 2`] = `
   \\"package_root\\": \\"/-/\\"
 }"
 `;
+
+exports[`cli tests pack displays console messages 1`] = `
+"Writing airdrop-pack-test.tgz
+Done! "
+`;
+
+exports[`cli tests pack merge displays console messages 1`] = `
+"Extracting airdrop-pack-test.tgz
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests pack merge importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-html@1.0.0\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+    \\"lit-html@1.0.0/\\": \\"/-/lit-html@1.0.0/\\",
+    \\"lit-html@1\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+    \\"lit-html@1/\\": \\"/-/lit-html@1.0.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+    },
+    \\"lit-html@1.0.0\\": {}
+  }
+}"
+`;

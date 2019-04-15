@@ -6,7 +6,7 @@ airdrop-cli
 ===========
 
 airdrop-cli is a package delivery tool for ES modules from [npm](https://www.npmjs.com/) packages.
-Use it to download packages from npm to be loaded in the browser with no external connection needed at runtime.
+Use it to deliver packages from npm to the browser with no external connection needed at runtime.
 
 ## Installation
 
@@ -44,23 +44,55 @@ For example, running `airdrop lit-element@2.0.1` will result in a `<package_path
 └── importmap.json
 ```
 
+and an import-map of:
+
+```json
+{
+  "imports": {
+    "lit-element@2.0.1": "<package_root>lit-element@2.0.1/lit-element.js",
+    "lit-element@2.0.1/": "<package_root>lit-element@2.0.1/",
+    "lit-element@2": "<package_root>lit-element@2.0.1/lit-element.js",
+    "lit-element@2/": "<package_root>lit-element@2.0.1/"
+  },
+  "scopes": {
+    "lit-element@2.0.1": {
+      "lit-html": "<package_root>lit-html@1.0.0/lit-html.js",
+      "lit-html/": "<package_root>lit-html@1.0.0/"
+    },
+    "lit-html@1.0.0": {}
+  }
+}
+```
+
 > The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import-maps, the package address is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
 The `--bundle` flag will add and bundle each `<package>` (and dependencies) into a esm bundle at `<package_path>/<name>@<version>.bundle.js`.  The import-map will be updated to resolve `<name>@<version>` to the bundle.
 
-For example, running `airdrop d3d3@5.9.2 --bundle` will result in a root directory structure of:
+For example, running `airdrop d3@5.9.2 --bundle` will result in a root directory structure of:
 
 ```
 <package_path>
 ├── <d3 deps>
-├── d3d3@5.9.2/
-├── d3d3@5.9.2.bundle.js
+├── d3@5.9.2/
+├── d3@5.9.2.bundle.js
 └── importmap.json
 ```
 
-### Airdropping packages
+and an import-map of:
 
-Adding packages requires a connection to the npm registry.  Once added an external connection is no longer required.  The `<package_path>` can be deployed with other assets or manually copied to a server.
+```json
+{
+  "imports": {
+    "d3@5.9.2": "<package_root>d3@5.9.2.bundle.js",
+    "d3@5": "<package_root>d3@5.9.2.bundle.js"
+  },
+  "scopes": {}
+}
+```
+
+### Moving packages
+
+Adding packages requires a connection to the npm registry.  Once added an external connection is no longer required.  The `<package_path>` directory can be deployed with other static assets or manually copied to a server.
 
 The following commands will help moving content from one system to another:
 
@@ -69,12 +101,11 @@ The following commands will help moving content from one system to another:
 
 ### Other commands
 
-- `airdrop init` - Adds an `airdrop.config.js` to the current directory.
+- `airdrop init` - Adds an `airdrop.config.js` to the current directory and empty importmap.
 - `airdrop version` - Output the version number.
 - `airdrop config` - Displays current configuration.
 - `airdrop clean` - Cleans the output directory.
 - `airdrop resolve <package>` - Prints the resolved url for package(s).
-- `airdrop bundle <package>` - Bundles existing package(s).
 
 ## In browser usage
 

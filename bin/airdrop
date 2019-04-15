@@ -8,9 +8,9 @@ const wantsCompiled = process.argv.indexOf('--compiled-gluegun') >= 0;
 const offline = process.argv.indexOf('--offline') >= 0;
 
 if (devMode && !wantsCompiled) {
-  /* if (offline) {
+  if (offline) {
     require('nock').disableNetConnect();
-  } */
+  }
 
   // hook into ts-node so we can run typescript on the fly
   require('ts-node').register({

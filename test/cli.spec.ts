@@ -1,18 +1,19 @@
-import { system } from 'gluegun/system';
 import { join } from 'path';
-import * as jetpack from 'fs-jetpack';
+import { removeAsync, existsAsync, readAsync } from 'fs-jetpack';
+import * as execa from 'execa';
 
 const testDir = join(process.cwd(), '/test');
 const testPath = join(testDir, '-/');
 const binFile = join(process.cwd(), '/bin/airdrop');
 
 async function execAirdrop(command: string) {
-  const output = await system.exec(`${binFile} ${command} --no-color`);
-  return output.replace(/\[.*s\]\n$/g, '');  // remove run duration
+  const commands = command.split(' ');
+  const result = await execa(binFile, [...commands, '--no-color']);
+  return result.stdout.replace(/\[.*s\]\n$/g, '');
 }
 
-function existsAirdrop(filename: string) {
-  return jetpack.exists(join(testPath, filename));
+async function existsAirdrop(filename: string) {
+  return existsAsync(join(testPath, filename));
 }
 
 const TIMEOUT = 10000;
@@ -20,9 +21,9 @@ const TIMEOUT = 10000;
 describe('cli tests', () => {
   beforeAll(async () => {
     process.chdir(testDir);
-    if (jetpack.exists(testPath)) {
-      await jetpack.remove(testPath);
-      await jetpack.remove(join(__dirname, 'airdrop.config.js'));
+    if (await existsAsync(testPath)) {
+      await removeAsync(testPath);
+      await removeAsync(join(__dirname, 'airdrop.config.js'));
     }
   });
 
@@ -57,14 +58,14 @@ describe('cli tests', () => {
     });
 
     test('files exist', async () => {
-      expect(await jetpack.exists('airdrop.config.js')).toBe('file');
-      expect(await jetpack.exists('-')).toBe('dir');
-      expect(await jetpack.exists('-/importmap.json')).toBe('file');
+      expect(await existsAsync('airdrop.config.js')).toBe('file');
+      expect(await existsAsync('-')).toBe('dir');
+      expect(await existsAsync('-/importmap.json')).toBe('file');
     });
 
     test('file content', async () => {
-      expect(await jetpack.readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
-      expect(await jetpack.readAsync(join(testDir, 'airdrop.config.js'))).toMatchSnapshot();
+      expect(await readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+      expect(await readAsync(join(testDir, 'airdrop.config.js'))).toMatchSnapshot();
     });
   });
 
@@ -87,7 +88,7 @@ describe('cli tests', () => {
     });
 
     test('importmap', async () => {
-      expect(await jetpack.readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+      expect(await readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
     });
 
     test('can\t add again', async () => {
@@ -126,7 +127,7 @@ describe('cli tests', () => {
     });
 
     test('importmap', async () => {
-      expect(await jetpack.readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+      expect(await readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
     });
 
     test('can\'t bundle again', async () => {
@@ -160,6 +161,47 @@ describe('cli tests', () => {
     test('resolves to the bundle', async () => {
       const out = await execAirdrop(`resolve lit-element@2.1.0 --offline`);
       expect(out).toEqual('/-/lit-element@2.1.0.bundle.js');
+    });
+  });
+
+  describe('pack', () => {
+    let output;
+
+    beforeAll(async () => {
+      await execAirdrop(`add lit-html@1.0.0 --clean`);
+      output = await execAirdrop(`pack airdrop-pack-test.tgz`);
+    }, TIMEOUT);
+
+    afterAll(async () => {
+      await removeAsync(`airdrop-pack-test.tgz`);
+    }, TIMEOUT);
+
+    test('displays console messages', async () => {
+      expect(output).toMatchSnapshot();
+    });
+
+    test('files exist', async () => {
+      expect(await existsAsync('airdrop-pack-test.tgz')).toBe('file');
+    });
+
+    describe('merge', () => {
+      beforeAll(async () => {
+        await execAirdrop(`add lit-element@2.1.0 --clean`);
+        output = await execAirdrop(`merge airdrop-pack-test.tgz`);
+      }, TIMEOUT);
+
+      test('displays console messages', () => {
+        expect(output).toMatchSnapshot();
+      });
+
+      test('files', async () => {
+        expect(await existsAirdrop('lit-element@2.1.0')).toBe('dir');
+        expect(await existsAirdrop('lit-html@1.0.0')).toBe('dir');
+      });
+
+      test('importmap', async () => {
+        expect(await readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+      });
     });
   });
 });

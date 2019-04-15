@@ -12,10 +12,10 @@ export default {
     const { parameters, print, timer, getAirdropOptions } = toolbox;
     const time = timer.start();
 
+    const file = parameters.array.filter(Boolean)[0] || `airdrop-${new Date().toISOString()}.tgz`;
     const options = await getAirdropOptions();
-    const file = `airdrop-${new Date().toISOString()}.tgz`;
 
-    print.info(`writing ${file}`)
+    print.info(`Writing ${file}`)
     await tar.create({
       gzip: true,
       file,
