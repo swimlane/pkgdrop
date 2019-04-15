@@ -107,6 +107,24 @@ exports[`cli tests pack displays console messages 1`] = `
 Done! "
 `;
 
+exports[`cli tests pack importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.0.0\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2.0.0/\\": \\"/-/lit-element@2.0.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.0.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.0.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+    },
+    \\"lit-html@1.0.0\\": {}
+  }
+}"
+`;
+
 exports[`cli tests pack merge displays console messages 1`] = `
 "Extracting airdrop-pack-test.tgz
 Writing importmap
@@ -120,17 +138,19 @@ exports[`cli tests pack merge importmap 1`] = `
     \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
     \\"lit-element@2\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
     \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\",
-    \\"lit-html@1.0.0\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-    \\"lit-html@1.0.0/\\": \\"/-/lit-html@1.0.0/\\",
-    \\"lit-html@1\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-    \\"lit-html@1/\\": \\"/-/lit-html@1.0.0/\\"
+    \\"lit-element@2.0.0\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2.0.0/\\": \\"/-/lit-element@2.0.0/\\"
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0\\": {
       \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
       \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
     },
-    \\"lit-html@1.0.0\\": {}
+    \\"lit-html@1.0.0\\": {},
+    \\"lit-element@2.0.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+    }
   }
 }"
 `;

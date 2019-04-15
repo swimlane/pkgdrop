@@ -14,15 +14,17 @@ Use it to deliver packages from npm to the browser with no external connection n
 $ npm @swimlane/airdrop-cli -g
 ```
 
-> Or use `npx @swimlane/airdrop-cli`
+> Or use `npx @swimlane/airdrop-cli` in place of the `airdrop`.
 
 ## CLI Usage
 
 ### Adding Packages
 
 ```bash
-airdrop <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
+airdrop add <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 ```
+
+> The `add` command is option, the default `airdrop` command is `add`.
 
 * `<package>`: npm package(s) (with optional version or tag) to add.
 * `--force`: force add package(s) that have already been added.
@@ -31,9 +33,9 @@ airdrop <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 * `--clean`: clean output directory before adding new packages.
 * `--no-color`: disable CLI colors.
 
-> The cli supports multiple packages and semver ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
+> The cli supports multiple packages and semantic version ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
 
-Packages added using `airdrop <package>` will be downloaded into a `<package_path>/<name>@<version/` directory.  The same will happen for each dependency of `<package>`.  An [import-map](https://github.com/WICG/import-maps) in the `<package_path>` directory will also be added or updated.
+Packages added using `airdrop <package>` will be downloaded into a `<package_path>/<name>@<version>/` directory.  The same will happen for each dependency of `<package>`.  An [import-map](https://github.com/WICG/import-maps) in the `<package_path>` directory will be added or updated.
 
 For example, running `airdrop lit-element@2.0.1` will result in a `<package_path>` directory structure of:
 
@@ -66,7 +68,7 @@ and an import-map of:
 
 > The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import-maps, the package address is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
-The `--bundle` flag will add and bundle each `<package>` (and dependencies) into a esm bundle at `<package_path>/<name>@<version>.bundle.js`.  The import-map will be updated to resolve `<name>@<version>` to the bundle.
+The `--bundle` flag will add and bundle each `<package>` into a esm bundle (and with inlined dependencies) at `<package_path>/<name>@<version>.bundle.js`.  The import-map will be updated to resolve `<name>@<version>` to the bundle.
 
 For example, running `airdrop d3@5.9.2 --bundle` will result in a root directory structure of:
 
@@ -90,18 +92,20 @@ and an import-map of:
 }
 ```
 
+> Note that `airdrop` will add an import of the form `<name>@<major-version>` that resolves to the latest local version of the package.
+
 ### Moving packages
 
-Adding packages requires a connection to the npm registry.  Once added an external connection is no longer required.  The `<package_path>` directory can be deployed with other static assets or manually copied to a server.
+Adding packages requires a connection to the npm registry.  Once added an external connection is no longer required.  The `<package_path>` directory can be deployed with other static assets or just manually copied between systems.
 
 The following commands will help moving content from one system to another:
 
-- `airdrop pack` - Create a tarball from the `<package_path>` directory.
+- `airdrop pack [<filename>]` - Create a tarball from the `<package_path>` directory.  The `<filename>` is option and will default to using a timestamp.
 - `airdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the packed import-map with the existing import-map.
 
 ### Other commands
 
-- `airdrop init` - Adds an `airdrop.config.js` to the current directory and empty importmap.
+- `airdrop init` - Adds an `airdrop.config.js` to the current directory and empty import-map.
 - `airdrop version` - Output the version number.
 - `airdrop config` - Displays current configuration.
 - `airdrop clean` - Cleans the output directory.
@@ -114,6 +118,8 @@ The following commands will help moving content from one system to another:
 The added ES modules can be loaded in the browser using a absolute path and full version.
 
 - `/<package_root>/<name>@<version>[/file-path]`
+
+> Use `airdrop resolve <package>` to find the resolved path.
 
 ```html
 <script type="module">
@@ -168,7 +174,7 @@ While most modern browsers include support for ES modules, bare package specifie
 
 ### Bundles
 
-Bundles can also be imported using fixed versions or bare imports.
+Bundles can also be imported using fixed versions or bare imports when combined with the import-map.
 
 ```html
 <script type="module">

@@ -1,7 +1,7 @@
 import * as tar from 'tar';
 
 import { AirdropToolbox } from '../extensions/load-location-config';
-import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions } from '../../lib/';
 import { cleanPackagePath } from '../shared';
 
 const stream = require('stream');
@@ -55,8 +55,11 @@ export default {
 
     const addedImportmap = JSON.parse(cs.collect().toString('utf8'));
 
+    const importmap = mergeImportmaps(inputImportmap, addedImportmap);
+    importmap.imports = addMajorVersions(importmap.imports);
+
     print.success(`Writing importmap`);
-    await writeImportmap(mergeImportmaps(inputImportmap, addedImportmap), options);
+    await writeImportmap(importmap, options);
 
     time.done();
   }

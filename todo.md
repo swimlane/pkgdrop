@@ -7,3 +7,4 @@
 - [ ] Do something for peers, devdeps?
 - [ ] `airdrop add <tarball>`?
 - [ ] `airdrop merge <folder>`
+- [ ] addMajorVersions on `merge`

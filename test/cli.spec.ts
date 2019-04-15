@@ -169,7 +169,7 @@ describe('cli tests', () => {
     let output;
 
     beforeAll(async () => {
-      await execAirdrop(`add lit-html@1.0.0 --clean`);
+      await execAirdrop(`add lit-element@2.0.0 --clean`);
       output = await execAirdrop(`pack airdrop-pack-test.tgz`);
     }, TIMEOUT);
 
@@ -185,6 +185,10 @@ describe('cli tests', () => {
       expect(await existsAsync('airdrop-pack-test.tgz')).toBe('file');
     });
 
+    test('importmap', async () => {
+      expect(await readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+    });
+
     describe('merge', () => {
       beforeAll(async () => {
         await execAirdrop(`add lit-element@2.1.0 --clean`);
@@ -197,7 +201,7 @@ describe('cli tests', () => {
 
       test('files', async () => {
         expect(await existsAirdrop('lit-element@2.1.0')).toBe('dir');
-        expect(await existsAirdrop('lit-html@1.0.0')).toBe('dir');
+        expect(await existsAirdrop('lit-element@2.0.0')).toBe('dir');
       });
 
       test('importmap', async () => {

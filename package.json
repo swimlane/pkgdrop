@@ -10,6 +10,7 @@
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "prestart": "npm run test:setup",
     "start": "live-server ./test/",
+    "pretest": "rimraf ./test/-/",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
