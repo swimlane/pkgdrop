@@ -1,6 +1,6 @@
 {
   "name": "@swimlane/airdrop-cli",
-  "version": "1.0.0",
+  "version": "1.0.0-rc1.0",
   "description": "package-server",
   "author": "J. Harshbarger",
   "license": "MIT",
@@ -15,7 +15,8 @@
     "test:cov": "jest --coverage",
     "test:setup": "npm run test:setup:pkgs && npm run test:setup:bundles",
     "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --clean",
-    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize"
+    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",
