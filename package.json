@@ -17,7 +17,8 @@
     "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --clean",
     "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize",
     "prepublishOnly": "npm run build",
-    "version": "chg release -y && git add -A CHANGELOG.md"
+    "version": "chg release -y && git add -A CHANGELOG.md",
+    "np": "np"
   },
   "dependencies": {
     "@swimlane/prettier-config-swimlane": "^2.0.0",
@@ -45,6 +46,7 @@
     "execa": "^1.0.0",
     "jest": "^23.6.0",
     "nock": "^10.0.6",
+    "np": "^4.0.2",
     "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
     "rollup": "^1.4.1",
