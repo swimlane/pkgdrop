@@ -1,4 +1,4 @@
-import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 import { getMap, addPackages, bundlePackages, cleanPackagePath } from '../shared';
 
@@ -9,7 +9,7 @@ export default {
   hidden: true,
   dashed: false,
   run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, timer, filesystem, getAirdropOptions } = toolbox;
+    const { parameters, print, timer, getAirdropOptions } = toolbox;
     const time = timer.start();
 
     const options = await getAirdropOptions();
@@ -28,6 +28,8 @@ export default {
       if (options.bundle) {
         addedImportmap = await bundlePackages(packages, mergeImportmaps(inputImportmap, addedImportmap), options);
       }
+
+      addedImportmap.imports = addMajorVersions(addedImportmap.imports);
 
       if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
         print.success(`Writing importmap`);

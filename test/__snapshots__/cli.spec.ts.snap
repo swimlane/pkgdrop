@@ -2,11 +2,35 @@
 
 exports[`cli tests add --bundle can force 1`] = `
 "Reading existing importmap
-Fetching package info for d3@5.9.2
-Bundling d3@5.9.2
-Writing bundle for d3@5.9.2
+Fetching package info for lit-element@2.1.0
+Bundling lit-element@2.1.0
+Writing bundle for lit-element@2.1.0
 Writing importmap
 Done! "
+`;
+
+exports[`cli tests add --bundle displays console messages 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0
+Extracting tarball for lit-html@1.0.0
+Fetching package info for lit-element@2.1.0
+Bundling lit-element@2.1.0
+Writing bundle for lit-element@2.1.0
+Writing importmap
+Done! "
+`;
+
+exports[`cli tests add --bundle importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0.bundle.js\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0.bundle.js\\"
+  },
+  \\"scopes\\": {}
+}"
 `;
 
 exports[`cli tests add can clean 1`] = `
@@ -44,7 +68,9 @@ exports[`cli tests add importmap 1`] = `
 "{
   \\"imports\\": {
     \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
-    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\"
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\"
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0\\": {
@@ -58,5 +84,20 @@ exports[`cli tests add importmap 1`] = `
 
 exports[`cli tests init displays console messages 1`] = `
 "Writing airdrop.config.js
+Writing importmap
 Done! "
+`;
+
+exports[`cli tests init file content 1`] = `
+"{
+  \\"imports\\": {},
+  \\"scopes\\": {}
+}"
+`;
+
+exports[`cli tests init file content 2`] = `
+"module.exports = {
+  \\"package_path\\": \\"./-/\\",
+  \\"package_root\\": \\"/-/\\"
+}"
 `;

@@ -8,7 +8,7 @@ export interface PackageInfo {
   main?: string;
 }
 
-export async function getLocalManifest(pkg: string, options: any): Promise<PackageInfo> {
-  const filepath = jetpack.path(options.package_path, pkg, 'package.json');
+export async function getLocalManifest(pkg: string, { package_path }: { package_path: string }): Promise<PackageInfo> {
+  const filepath = jetpack.path(package_path, pkg, 'package.json');
   return jetpack.read(filepath, 'json')
 }

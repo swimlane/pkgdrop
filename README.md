@@ -11,10 +11,10 @@ Use it to download packages from npm to be loaded in the browser with no externa
 ## Installation
 
 ```bash
-$ npm airdrop -g
+$ npm @swimlane/airdrop-cli -g
 ```
 
-> Or use `npx airdrop`
+> Or use `npx @swimlane/airdrop-cli`
 
 ## CLI Usage
 

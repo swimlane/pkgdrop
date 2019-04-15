@@ -1,15 +1,15 @@
 import { GluegunToolbox } from 'gluegun';
 
 export default (toolbox: GluegunToolbox) => {
-  const { print } = toolbox;
+  const { print, system } = toolbox;
 
   toolbox.timer = {
     start () {
-      const startTime = Date.now();
+      const timer = system.startTimer();
       return {
         done(msg = 'Done!') {
-          const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-          const time = print.colors.muted(`[${elapsed}s]`);
+          const elapsed = (timer() / 1000).toFixed(2);
+          const time = print.colors.muted(`[${elapsed} s]`);
           print.success(`${msg} ${time}\n`);
         }
       }

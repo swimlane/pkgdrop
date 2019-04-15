@@ -15,13 +15,14 @@ function existsAirdrop(filename: string) {
   return jetpack.exists(join(testPath, filename));
 }
 
+const TIMEOUT = 10000;
+
 describe('cli tests', () => {
   beforeAll(async () => {
     process.chdir(testDir);
     if (jetpack.exists(testPath)) {
       await jetpack.remove(testPath);
       await jetpack.remove(join(__dirname, 'airdrop.config.js'));
-      return;
     }
   });
 
@@ -51,24 +52,29 @@ describe('cli tests', () => {
       output = await execAirdrop(`init -y --offline`);
     });
 
-    test('displays console messages', async () => {
+    test('displays console messages', () => {
       expect(output).toMatchSnapshot();
     });
 
     test('files exist', async () => {
       expect(await jetpack.exists('airdrop.config.js')).toBe('file');
+      expect(await jetpack.exists('-')).toBe('dir');
+      expect(await jetpack.exists('-/importmap.json')).toBe('file');
     });
 
-    // TODO: Init again shouldn't change results
+    test('file content', async () => {
+      expect(await jetpack.readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
+      expect(await jetpack.readAsync(join(testDir, 'airdrop.config.js'))).toMatchSnapshot();
+    });
   });
 
   describe('add', () => {
     let output;
 
     beforeAll(async () => {
-      await execAirdrop(`init`);
+      await execAirdrop(`init -y --offline`);
       output = await execAirdrop(`add lit-element@2.1.0 --clean`);
-    }, 80000);
+    }, TIMEOUT);
 
     test('displays console messages', async () => {
       expect(output).toMatchSnapshot();
@@ -107,43 +113,43 @@ describe('cli tests', () => {
     let output;
 
     beforeAll(async () => {
-      output = await execAirdrop(`add d3@5.9.2 --bundle`);
-    }, 30000);
+      output = await execAirdrop(`add lit-element@2.1.0 --clean --bundle`);
+    }, TIMEOUT);
 
     test('displays console messages', () => {
-      expect(output).toContain('Reading existing importmap');
-      expect(output).toContain('Fetching package information for d3@5.9.2');
-      expect(output).toContain('Bundling d3@5.9.2');
-      expect(output).toContain('Writing importmap');
+      expect(output).toMatchSnapshot();
     });
 
     test('files exist', async () => {
-      expect(await existsAirdrop('d3@5.9.2.bundle.js')).toBe('file');
+      expect(await existsAirdrop('lit-element@2.1.0.bundle.js')).toBe('file');
       expect(await existsAirdrop('importmap.json')).toBe('file');
-      // TODO: check importmap for deps
+    });
+
+    test('importmap', async () => {
+      expect(await jetpack.readAsync(join(testPath, 'importmap.json'))).toMatchSnapshot();
     });
 
     test('can\'t bundle again', async () => {
-      const out = await execAirdrop(`bundle d3@5.9.2`);
+      const out = await execAirdrop(`bundle lit-element@2.1.0 --offline`);
       expect(out).toContain('Bundle already exists');
       expect(out).toContain('skipping');
     }, 30000);
 
     test('can force', async () => {
-      const out = await execAirdrop(`bundle d3@5.9.2 --force`);
+      const out = await execAirdrop(`bundle lit-element@2.1.0 --force --offline`);
       expect(out).toMatchSnapshot();
-    }, 30000);
+    }, TIMEOUT);
   });
 
   describe('resolve', () => {
     beforeAll(async () => {
-      await execAirdrop(`add lit-element@2.1.0`);
-      await execAirdrop(`add d3@5.9.2 --bundle`);
-    }, 10000);
+      await execAirdrop(`add lit-html@1.0.0`);
+      await execAirdrop(`add lit-element@2.1.0 --bundle`);
+    }, TIMEOUT);
 
     test('displays resolved path', async () => {
-      const out = await execAirdrop(`resolve lit-element@2.1.0 --offline`);
-      expect(out).toEqual('/-/lit-element@2.1.0/lit-element.js');
+      const out = await execAirdrop(`resolve lit-html@1.0.0 --offline`);
+      expect(out).toEqual('/-/lit-html@1.0.0/lit-html.js');
     });
 
     test('displays not found when not added', async () => {
@@ -152,8 +158,8 @@ describe('cli tests', () => {
     });
 
     test('resolves to the bundle', async () => {
-      const out = await execAirdrop(`resolve d3@5.9.2 --offline`);
-      expect(out).toEqual('/-/d3@5.9.2.bundle.js');
+      const out = await execAirdrop(`resolve lit-element@2.1.0 --offline`);
+      expect(out).toEqual('/-/lit-element@2.1.0.bundle.js');
     });
   });
 });

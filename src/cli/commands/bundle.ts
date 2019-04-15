@@ -1,4 +1,4 @@
-import { readImportmap, writeImportmap  } from '../../lib/';
+import { readImportmap, writeImportmap, addMajorVersions  } from '../../lib/';
 import { AirdropToolbox } from '../extensions/load-location-config';
 import { bundlePackages } from '../shared';
 
@@ -21,6 +21,8 @@ export default {
 
     const { imports } = await bundlePackages(packages, importmap, options);
     Object.assign(importmap.imports, imports);
+
+    importmap.imports = addMajorVersions(importmap.imports);
 
     print.success(`Writing importmap`);
     await writeImportmap(importmap, options);

@@ -11,8 +11,6 @@ export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
     .version()
     .exclude([
       'semver',
-      'system', 
-       // 'prompt',
       'http',
       'template',
       'patching'

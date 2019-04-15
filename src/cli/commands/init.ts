@@ -1,5 +1,8 @@
 import { GluegunToolbox } from 'gluegun';
 import * as cosmiconfig from 'cosmiconfig';
+import { dirname, join } from 'path';
+
+import { readImportmap, writeImportmap, mergeImportmaps } from '../../lib/';
 
 export default {
   name: 'init',
@@ -8,7 +11,7 @@ export default {
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { print, filesystem, timer, getAirdropOptions, prompt } = toolbox;
+    const { print, filesystem, timer, getAirdropOptions, prompt, runtime: { brand } } = toolbox;
     const time = timer.start();
 
     const options = await getAirdropOptions();
@@ -20,14 +23,17 @@ export default {
     };
 
     try {
-      const res = await cosmiconfig().load(configPath);
+      // load current config, if it exists
+      const res = await cosmiconfig(brand).load(configPath);
       Object.assign(config, res.config);
     } catch (e) {
       // noop
     }
 
     let code;
-    if (!options.y) {
+    if (!options.y) {  // prompt user for config values
+      print.info(`Let's walk through creating a airdrop.config.json file.`);
+
       const askPath = {
         type: 'input',
         name: 'package_path',
@@ -43,12 +49,15 @@ export default {
       };
 
       const response = await prompt.ask([askPath, askRoot]);
+
+      // Overwrite existing
       Object.assign(config, response);
       
       code = 'module.exports = ' + JSON.stringify(config, null, 2);
 
       print.newline();
       print.info(code);
+
       if (await toolbox.prompt.confirm('Is this OK?') === false) {
         print.warning('Aborting');
         return;
@@ -59,6 +68,22 @@ export default {
 
     print.info(`Writing airdrop.config.js`);
     await filesystem.writeAsync(configPath, code);
+
+    // tslint:disable-next-line:variable-name
+    const package_path = join(dirname(configPath), config.package_path);
+    await filesystem.dirAsync(package_path);
+
+    // write importmap if none exists already
+    const importmapPath = filesystem.path(package_path, 'importmap.json');
+    if (!(await filesystem.existsAsync(importmapPath))) {
+      const importmap = {
+        imports: {},
+        scopes: {}
+      };
+
+      print.success(`Writing importmap`);
+      await writeImportmap(importmap, { package_path });
+    }
 
     time.done();
   }

@@ -3,22 +3,23 @@
 /* tslint:disable */
 
 // check if we're running in dev mode
-var devMode = require('fs').existsSync(`${__dirname}/../src`)
-var wantsCompiled = process.argv.indexOf('--compiled-gluegun') >= 0
-var offline = process.argv.indexOf('--offline') >= 0
+const devMode = require('fs').existsSync(`${__dirname}/../src`);
+const wantsCompiled = process.argv.indexOf('--compiled-gluegun') >= 0;
+const offline = process.argv.indexOf('--offline') >= 0;
 
 if (devMode && !wantsCompiled) {
-  if (offline) {
-    require('nock').disableNetConnect()
-  }
+  /* if (offline) {
+    require('nock').disableNetConnect();
+  } */
 
   // hook into ts-node so we can run typescript on the fly
   require('ts-node').register({
     project: `${__dirname}/../tsconfig.json`,
     compiler: require.resolve('typescript', { paths: [__dirname] }),
-  })
+  });
+
   // kick off gluegun
-  require(`${__dirname}/../src/cli/cli`).run(process.argv)
+  require(`${__dirname}/../src/cli/cli`).run(process.argv);
 } else {
-  require(`${__dirname}/../build/cli/cli`).run(process.argv)
+  require(`${__dirname}/../build/cli/cli`).run(process.argv);
 }

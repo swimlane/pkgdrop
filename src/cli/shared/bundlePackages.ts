@@ -10,7 +10,7 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
   const buildBundles = packages.map(async (pkg: string) => {
     print.info(`Fetching package info for ${pkg}`);
 
-    const pkgId = await expandLocalVersion(pkg, importmap.imports)
+    const pkgId = expandLocalVersion(pkg, importmap.imports);
     const pkgInfo = await getLocalManifest(pkgId, options);
 
     const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
