@@ -11,7 +11,7 @@ Use it to deliver packages from npm to the browser with no external connection n
 ## Summary
 
 - Downloads and extracts packages from npm, including dependencies, into a flat file structure.
-- Optionally bundles packages, and dependencies, into a single ESM.
+- Optionally bundles packages, and dependencies, into a single ES module.
 - Generates a import-map compatible with the [WICG import-maps](https://github.com/WICG/import-maps) proposal (and shims).
 - Provides a method to archive and merge downloaded packages and import-maps between systems.
 
@@ -21,7 +21,7 @@ Use it to deliver packages from npm to the browser with no external connection n
 $ npm @swimlane/airdrop-cli -g
 ```
 
-> Or use `npx @swimlane/airdrop-cli` in place of the `airdrop`.
+> Or use `npx @swimlane/airdrop-cli` in place of `airdrop` in the examples below.
 
 ## CLI Usage
 
