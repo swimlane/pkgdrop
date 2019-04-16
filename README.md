@@ -8,6 +8,13 @@ airdrop-cli
 airdrop-cli is a package delivery tool for ES modules from [npm](https://www.npmjs.com/) packages.
 Use it to deliver packages from npm to the browser with no external connection needed at runtime.
 
+## Summary
+
+- Downloads and extracts packages from npm, including dependencies, into a flat file structure.
+- Optionally bundles packages, and dependencies, into a single ESM.
+- Generates a import-map compatible with the [WICG import-maps](https://github.com/WICG/import-maps) proposal (and shims).
+- Provides a method to archive and merge downloaded packages and import-maps between systems.
+
 ## Installation
 
 ```bash
