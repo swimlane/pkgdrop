@@ -18,7 +18,7 @@ Use it to deliver packages from npm to the browser with no external connection n
 ## Installation
 
 ```bash
-$ npm @swimlane/airdrop-cli -g
+$ npm install @swimlane/airdrop-cli -g
 ```
 
 > Or use `npx @swimlane/airdrop-cli` in place of `airdrop` in the examples below.
