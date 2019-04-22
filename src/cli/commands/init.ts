@@ -48,6 +48,8 @@ export default {
         message: 'Package root: '
       };
 
+
+
       const response = await prompt.ask([askPath, askRoot]);
 
       // Overwrite existing
@@ -58,7 +60,16 @@ export default {
       print.newline();
       print.info(code);
 
-      if (await toolbox.prompt.confirm('Is this OK?') === false) {
+      const askOk: any = {
+        name: 'ok',
+        type: 'confirm',
+        initial: true,
+        message: 'Is thsi OK?'
+      };
+
+      const { ok } = await prompt.ask(askOk);
+
+      if (Boolean(ok) === false) {
         print.warning('Aborting');
         return;
       }
