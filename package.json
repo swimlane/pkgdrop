@@ -33,6 +33,7 @@
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rollup": "^1.4.1",
+    "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-terser": "^4.0.4",
     "semver": "^6.0.0",
     "tar": "^4.4.8",

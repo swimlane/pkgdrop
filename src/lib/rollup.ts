@@ -1,5 +1,6 @@
 import { rollup, RollupOptions, OutputOptions, Plugin } from 'rollup';
 import { terser } from 'rollup-plugin-terser';
+import * as commonjs from 'rollup-plugin-commonjs';
 import * as jetpack from 'fs-jetpack';
 import { join } from 'path';
 
@@ -19,6 +20,7 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
       input: [packagePath],
       plugins: [
         airdropResolverPlugin(importmap, options),
+        (commonjs as any)(),
         options.optimize && terser()
       ]
     };

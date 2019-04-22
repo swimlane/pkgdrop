@@ -2,7 +2,8 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Default response to init confirm is yes
+* Default response to `init` confirm is yes
+* Added rollup-plugin-commonjs plugin
 
 --------------------
 
