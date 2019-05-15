@@ -1,9 +1,11 @@
 /// <reference path="index.d.ts" />
 
 import { extract } from 'pacote';
-import { print, filesystem } from 'gluegun'; 
+import { print, filesystem } from 'gluegun';
 
 import { ImportMap, AirdropOptions } from '../../lib/';
+
+const npmconfig = require('libnpmconfig').read();
 
 export async function addPackages(map: ImportMap, options: AirdropOptions) {
   const packages = Object.keys(map.scopes);
@@ -14,6 +16,6 @@ export async function addPackages(map: ImportMap, options: AirdropOptions) {
 async function addPackage(pkg: string, options: AirdropOptions) {
   const packagePath = filesystem.path(options.package_path, pkg);
   print.info(`Extracting tarball for ${pkg}`);
-  await extract(pkg, packagePath);
+  await extract(pkg, packagePath, npmconfig);
   return pkg;
 }

@@ -26,6 +26,7 @@
     "cosmiconfig": "^5.2.0",
     "fs-jetpack": "^2.2.2",
     "gluegun": "^3.0.0",
+    "libnpmconfig": "^1.2.1",
     "ngraph.graph": "0.0.18",
     "npm-package-arg": "^6.1.0",
     "npmgraphbuilder": "^2.2.0",

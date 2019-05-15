@@ -48,8 +48,6 @@ export default {
         message: 'Package root: '
       };
 
-
-
       const response = await prompt.ask([askPath, askRoot]);
 
       // Overwrite existing

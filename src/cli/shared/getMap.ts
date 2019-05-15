@@ -2,10 +2,9 @@
 
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
-import { manifest } from 'pacote';
-import { stringify } from 'querystring';
+import { manifest, packument } from 'pacote';
 import { join } from 'path';
-import { get } from 'http';
+import { read } from 'libnpmconfig';
 
 import { print } from 'gluegun'; 
 
@@ -21,8 +20,13 @@ interface PackageLink {
 
 import { PackageInfo, Scopes, Imports, ImportMap, AirdropOptions } from '../../lib/';
 
+
+
 export async function getMap(packages: string[], importmap: ImportMap, options: AirdropOptions) {
-  const { createNpmDependenciesGraph } = buildGraph(httpClient, 'http://registry.npmjs.org/');
+  const registry = 'http://registry.npmjs.org/';
+  const npmconfig = read().concat({'full-metadata': true});
+  
+  const { createNpmDependenciesGraph } = buildGraph(httpClient, registry);
 
   const imports: Imports = {};
   const scopes: Scopes = {};
@@ -32,9 +36,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
 
     let pkgInfo: PackageInfo;
     try {
-      pkgInfo = await manifest(pkg, {
-        'full-metadata': true
-      });      
+      pkgInfo = await manifest(pkg, npmconfig);
     } catch (e) {
       print.warning(`Package ${pkg} not found, skipping`);
       return;
@@ -84,18 +86,16 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
     imports,
     scopes
   }
-}
 
-function httpClient(url: string, data: string) {
-  return new Promise((resolve, reject) => {
-    get(url + '?' + stringify(data), function (res) {
-      let body = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        body += chunk;
-      }).on('end', () => {
-        resolve({ data: JSON.parse(body) });
-      }).on('error', reject);
-    });
-  });
+  function httpClient(url: string, data: string) {
+    url = url.replace(registry, '').replace('?', '').replace('%2f', '/');
+    return packument(url, npmconfig)
+      .then((d: any) => {
+        Object.keys(d.versions).forEach(k => {
+          const v = d.versions[k];
+          v._id = v._id || `${v.name}@${v.version}`;  // For some reason this is missing on private packages.
+        });
+        return { data: d };
+      });
+  }
 }

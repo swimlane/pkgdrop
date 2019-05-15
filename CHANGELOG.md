@@ -4,6 +4,7 @@ CHANGELOG
 ## HEAD (Unreleased)
 * Default response to `init` confirm is yes
 * Added rollup-plugin-commonjs plugin
+* Support private packages
 
 --------------------
 
