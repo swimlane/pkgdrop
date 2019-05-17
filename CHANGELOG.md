@@ -10,7 +10,7 @@ _(none)_
 * Default response to `init` confirm is yes
 * Added rollup-plugin-commonjs plugin
 * Support private packages
-* Rename as `pkgdrop`
+* Rename as `pkgdrop`
 
 ## 1.0.0 (2019-04-19)
 _(none)_
