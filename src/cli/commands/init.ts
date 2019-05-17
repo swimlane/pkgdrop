@@ -7,15 +7,15 @@ import { writeImportmap } from '../../lib/';
 export default {
   name: 'init',
   alias: ['i'],
-  description: 'Adds a airdrop.config.js to the current directory',
+  description: 'Adds a pkgdrop.config.js to the current directory',
   hidden: false,
   dashed: false,
   run: async (toolbox: GluegunToolbox) => {
-    const { print, filesystem, timer, getAirdropOptions, prompt, runtime: { brand } } = toolbox;
+    const { print, filesystem, timer, getPkgdropOptions, prompt, runtime: { brand } } = toolbox;
     const time = timer.start();
 
-    const options = await getAirdropOptions();
-    const configPath = filesystem.path(options.config || 'airdrop.config.js');
+    const options = await getPkgdropOptions();
+    const configPath = filesystem.path(options.config || 'pkgdrop.config.js');
 
     const config = {
       package_path: './-/',
@@ -32,7 +32,7 @@ export default {
 
     let code;
     if (!options.y) {  // prompt user for config values
-      print.info(`Let's walk through creating a airdrop.config.json file.`);
+      print.info(`Let's walk through creating a pkgdrop.config.json file.`);
 
       const askPath = {
         type: 'input',
@@ -75,7 +75,7 @@ export default {
       code = 'module.exports = ' + JSON.stringify(config, null, 2);
     }
 
-    print.info(`Writing airdrop.config.js`);
+    print.info(`Writing pkgdrop.config.js`);
     await filesystem.writeAsync(configPath, code);
 
     // tslint:disable-next-line:variable-name

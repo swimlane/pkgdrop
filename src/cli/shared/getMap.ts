@@ -18,11 +18,11 @@ interface PackageLink {
   toId: string;
 }
 
-import { PackageInfo, Scopes, Imports, ImportMap, AirdropOptions } from '../../lib/';
+import { PackageInfo, Scopes, Imports, ImportMap, PkgdropOptions } from '../../lib/';
 
 
 
-export async function getMap(packages: string[], importmap: ImportMap, options: AirdropOptions) {
+export async function getMap(packages: string[], importmap: ImportMap, options: PkgdropOptions) {
   const registry = 'http://registry.npmjs.org/';
   const npmconfig = read().concat({'full-metadata': true});
   

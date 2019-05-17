@@ -1,5 +1,5 @@
 import { readImportmap, createResolver, expandLocalVersion } from '../../lib/';
-import { AirdropToolbox } from '../extensions/load-location-config';
+import { PkgdropToolbox } from '../extensions/load-location-config';
 
 export default {
   name: 'resolve',
@@ -7,10 +7,10 @@ export default {
   description: 'Prints the resolved url for a package',
   hidden: false,
   dashed: false,
-  run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, getAirdropOptions } = toolbox;
+  run: async (toolbox: PkgdropToolbox) => {
+    const { parameters, print, getPkgdropOptions } = toolbox;
 
-    const options = await getAirdropOptions();
+    const options = await getPkgdropOptions();
 
     const packages = parameters.array.filter(Boolean);
 

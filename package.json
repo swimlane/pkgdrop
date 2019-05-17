@@ -1,7 +1,7 @@
 {
-  "name": "@swimlane/airdrop-cli",
+  "name": "@swimlane/pkgdrop",
   "version": "1.0.0",
-  "description": "package-server",
+  "description": "package-drop",
   "author": "J. Harshbarger",
   "license": "MIT",
   "scripts": {
@@ -15,8 +15,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:setup": "npm run test:setup:pkgs && npm run test:setup:bundles",
-    "test:setup:pkgs": "airdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --clean",
-    "test:setup:bundles": "airdrop add d3@5.9.2 --bundle --optimize",
+    "test:setup:pkgs": "pkgdrop add es-module-shims@0.2.3 lit-html@1.0.0 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --clean",
+    "test:setup:bundles": "pkgdrop add d3@5.9.2 --bundle --optimize",
     "prepublishOnly": "rimraf ./dist && npm run build",
     "version": "chg release -y && git add -A CHANGELOG.md",
     "np": "np"
@@ -78,26 +78,25 @@
     "testEnvironment": "node"
   },
   "bin": {
-    "airdrop": "./bin/airdrop"
+    "pkgdrop": "./bin/pkgdrop"
   },
   "files": [
     "build",
     "bin"
   ],
-  "main": "airdrop.config.js",
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/swimlane/airdrop-cli.git"
+    "url": "git+https://github.com/swimlane/pkgdrop.git"
   },
   "keywords": [
     "packages",
     "modules"
   ],
   "bugs": {
-    "url": "https://github.com/swimlane/airdrop-cli/issues"
+    "url": "https://github.com/swimlane/pkgdrop/issues"
   },
-  "homepage": "https://github.com/swimlane/airdrop-cli#readme"
+  "homepage": "https://github.com/swimlane/pkgdrop#readme"
 }

@@ -5,6 +5,9 @@ CHANGELOG
 * Default response to `init` confirm is yes
 * Added rollup-plugin-commonjs plugin
 * Support private packages
+* Rename [0mNo packages specified[0m
+[32mDone! [90m[0.01 s][32m[39m
+[32m[39m
 
 --------------------
 

@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="./airdrop.png" width="200" alt="airdrop Logo" />
+  <img src="./pkgdrop.png" width="200" alt="pkgdrop Logo" />
 </p>
 
-airdrop-cli
+pkgdrop
 ===========
 
-airdrop-cli is a package delivery tool for ES modules from [npm](https://www.npmjs.com/) packages.
+`pkgdrop` is a package delivery tool for ES modules from [npm](https://www.npmjs.com/) packages.
 Use it to deliver packages from npm to the browser with no external connection needed at runtime.
 
 ## Summary
@@ -18,20 +18,20 @@ Use it to deliver packages from npm to the browser with no external connection n
 ## Installation
 
 ```bash
-$ npm install @swimlane/airdrop-cli -g
+$ npm install @swimlane/pkgdrop -g
 ```
 
-> Or use `npx @swimlane/airdrop-cli` in place of `airdrop` in the examples below.
+> Or use `npx @swimlane/pkgdrop` in place of `pkgdrop` in the examples below.
 
 ## CLI Usage
 
 ### Adding Packages
 
 ```bash
-airdrop add <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
+pkgdrop add <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 ```
 
-> The `add` command is optional; the default `airdrop` command is `add`.
+> The `add` command is optional; the default `pkgdrop` command is `add`.
 
 * `<package>`: npm package(s) (with optional version or tag) to add
 * `--force`: force add package(s) that have already been added
@@ -40,11 +40,11 @@ airdrop add <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 * `--clean`: clean output directory before adding new packages
 * `--no-color`: disable CLI colors
 
-> The cli supports multiple packages and semantic version ranges.  For example `airdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
+> The cli supports multiple packages and semantic version ranges.  For example `pkgdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
 
-Packages added using `airdrop <package>` are downloaded into a `<package_path>/<name>@<version>/` directory.  The same happens for each dependency of `<package>`.  An [import-map](https://github.com/WICG/import-maps) in the `<package_path>` directory is added or updated.
+Packages added using `pkgdrop <package>` are downloaded into a `<package_path>/<name>@<version>/` directory.  The same happens for each dependency of `<package>`.  An [import-map](https://github.com/WICG/import-maps) in the `<package_path>` directory is added or updated.
 
-For example, running `airdrop lit-element@2.0.1` results in a `<package_path>` directory structure of:
+For example, running `pkgdrop lit-element@2.0.1` results in a `<package_path>` directory structure of:
 
 ```
 <package_path>
@@ -73,11 +73,11 @@ and an import-map of:
 }
 ```
 
-> The `<package_path>` directory is configurable via the `package_path` property in `airdrop.config.js`, the default is `./-/`.  In the generated import-maps, the package address is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
+> The `<package_path>` directory is configurable via the `package_path` property in `pkgdrop.config.js`, the default is `./-/`.  In the generated import-maps, the package address is configurable via the `package_root` property, the default is `/-/`.  This value must start with `/`, `../`, or `./`, or be an absolute URL.
 
 The `--bundle` flag adds and bundles each `<package>` into a esm bundle (and with inlined dependencies) at `<package_path>/<name>@<version>.bundle.js`.  The import-map is updated to resolve `<name>@<version>` to the bundle.
 
-For example, running `airdrop d3@5.9.2 --bundle` results in a root directory structure of:
+For example, running `pkgdrop d3@5.9.2 --bundle` results in a root directory structure of:
 
 ```
 <package_path>
@@ -99,7 +99,7 @@ and an import-map of:
 }
 ```
 
-> Note that `airdrop` adds an import of the form `<name>@<major-version>` that resolves to the latest local version of the package.
+> Note that `pkgdrop` adds an import of the form `<name>@<major-version>` that resolves to the latest local version of the package.
 
 ### Moving packages
 
@@ -107,16 +107,16 @@ Adding packages requires a connection to the npm registry.  Once added an extern
 
 The following commands help move content from one system to another:
 
-- `airdrop pack [<filename>]` - Creates a tarball from the `<package_path>` directory.  The `<filename>` is optional and defaults to using a timestamp.
-- `airdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the packed import-map with the existing import-map.
+- `pkgdrop pack [<filename>]` - Creates a tarball from the `<package_path>` directory.  The `<filename>` is optional and defaults to using a timestamp.
+- `pkgdrop merge <filename>` - Unpacks a tarball to the `<package_path>` directory, merging the packed import-map with the existing import-map.
 
 ### Other commands
 
-- `airdrop init` - Adds an `airdrop.config.js` to the current directory and an empty import-map.
-- `airdrop version` - Outputs the version number.
-- `airdrop config` - Displays current configuration.
-- `airdrop clean` - Cleans the output directory.
-- `airdrop resolve <package>` - Prints the resolved url for package(s).
+- `pkgdrop init` - Adds an `pkgdrop.config.js` to the current directory and an empty import-map.
+- `pkgdrop version` - Outputs the version number.
+- `pkgdrop config` - Displays current configuration.
+- `pkgdrop clean` - Cleans the output directory.
+- `pkgdrop resolve <package>` - Prints the resolved url for package(s).
 
 ## In browser usage
 
@@ -126,7 +126,7 @@ The added ES modules can be loaded in the browser using a absolute path and full
 
 - `/<package_root>/<name>@<version>[/file-path]`
 
-> Use `airdrop resolve <package>` to find the resolved path.
+> Use `pkgdrop resolve <package>` to find the resolved path.
 
 ```html
 <script type="module">
@@ -206,7 +206,7 @@ Bundles can also be imported using fixed versions or bare imports when combined 
 
 ## Credits
 
-`airdrop` is a [Swimlane](http://swimlane.com) open-source project; we believe in giving back to the open-source community by sharing some of the projects we build for our application. Swimlane is an automated cyber security operations and incident response platform that enables cyber security teams to leverage threat intelligence, speed up incident response and automate security operations.
+`pkgdrop` is a [Swimlane](http://swimlane.com) open-source project; we believe in giving back to the open-source community by sharing some of the projects we build for our application. Swimlane is an automated cyber security operations and incident response platform that enables cyber security teams to leverage threat intelligence, speed up incident response and automate security operations.
 
 ## License
 

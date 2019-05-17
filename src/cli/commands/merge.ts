@@ -1,6 +1,6 @@
 import * as tar from 'tar';
 
-import { AirdropToolbox } from '../extensions/load-location-config';
+import { PkgdropToolbox } from '../extensions/load-location-config';
 import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions } from '../../lib/';
 import { cleanPackagePath } from '../shared';
 
@@ -25,11 +25,11 @@ export default {
   description: 'Unpacks a tarball to the output directory, merging the existing import map.',
   hidden: false,
   dashed: false,
-  run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, timer, filesystem, getAirdropOptions } = toolbox;
+  run: async (toolbox: PkgdropToolbox) => {
+    const { parameters, print, timer, filesystem, getPkgdropOptions } = toolbox;
     const time = timer.start();
 
-    const options = await getAirdropOptions();
+    const options = await getPkgdropOptions();
     const inputImportmap = await readImportmap(options);
     const file = parameters.array[0];
 

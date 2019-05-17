@@ -1,4 +1,4 @@
-import { AirdropToolbox } from '../extensions/load-location-config';
+import { PkgdropToolbox } from '../extensions/load-location-config';
 import { cleanPackagePath } from '../shared';
 
 export default {
@@ -6,11 +6,11 @@ export default {
   description: 'Cleans the output directory',
   hidden: false,
   dashed: true,
-  run: async (toolbox: AirdropToolbox) => {
-    const { timer, getAirdropOptions } = toolbox;
+  run: async (toolbox: PkgdropToolbox) => {
+    const { timer, getPkgdropOptions } = toolbox;
     const time = timer.start();
 
-    const options = await getAirdropOptions();
+    const options = await getPkgdropOptions();
     await cleanPackagePath(options);
 
     time.done();

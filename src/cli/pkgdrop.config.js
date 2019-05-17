@@ -3,5 +3,5 @@ module.exports = {
     package_path: './-/',
     package_root: '/-/',    
   },
-  name: 'airdrop'
+  name: 'pkgdrop'
 }

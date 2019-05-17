@@ -1,4 +1,4 @@
-export interface AirdropOptions {
+export interface PkgdropOptions {
   package_path: string;
   package_root: string;
   config_path: string;

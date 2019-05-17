@@ -3,17 +3,17 @@
 import { extract } from 'pacote';
 import { print, filesystem } from 'gluegun';
 
-import { ImportMap, AirdropOptions } from '../../lib/';
+import { ImportMap, PkgdropOptions } from '../../lib/';
 
 const npmconfig = require('libnpmconfig').read();
 
-export async function addPackages(map: ImportMap, options: AirdropOptions) {
+export async function addPackages(map: ImportMap, options: PkgdropOptions) {
   const packages = Object.keys(map.scopes);
   await Promise.all(packages.map(pkg => addPackage(pkg, options)));
   return map;
 }
 
-async function addPackage(pkg: string, options: AirdropOptions) {
+async function addPackage(pkg: string, options: PkgdropOptions) {
   const packagePath = filesystem.path(options.package_path, pkg);
   print.info(`Extracting tarball for ${pkg}`);
   await extract(pkg, packagePath, npmconfig);

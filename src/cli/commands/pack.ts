@@ -1,6 +1,6 @@
 import * as tar from 'tar';
 
-import { AirdropToolbox } from '../extensions/load-location-config';
+import { PkgdropToolbox } from '../extensions/load-location-config';
 
 export default {
   name: 'pack',
@@ -8,12 +8,12 @@ export default {
   description: 'Create a tarball from the out directory',
   hidden: false,
   dashed: false,
-  run: async (toolbox: AirdropToolbox) => {
-    const { parameters, print, timer, getAirdropOptions } = toolbox;
+  run: async (toolbox: PkgdropToolbox) => {
+    const { parameters, print, timer, getPkgdropOptions } = toolbox;
     const time = timer.start();
 
-    const file = parameters.array.filter(Boolean)[0] || `airdrop-${new Date().toISOString()}.tgz`;
-    const options = await getAirdropOptions();
+    const file = parameters.array.filter(Boolean)[0] || `pkgdrop-${new Date().toISOString()}.tgz`;
+    const options = await getPkgdropOptions();
 
     print.info(`Writing ${file}`)
     await tar.create({

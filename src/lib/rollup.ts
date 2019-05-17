@@ -5,10 +5,10 @@ import * as jetpack from 'fs-jetpack';
 import { join } from 'path';
 
 import { ImportMap } from './importmaps';
-import { AirdropOptions } from './airdrop';
+import { PkgdropOptions } from './pkgdrop';
 import { createResolver } from './resolver';
 
-export async function genererateBundle(packagePath: string, importmap: ImportMap, options: AirdropOptions): Promise<string> {
+export async function genererateBundle(packagePath: string, importmap: ImportMap, options: PkgdropOptions): Promise<string> {
     const outputOptions: OutputOptions = {
       format: 'esm' as 'esm',
       sourcemap: true,
@@ -19,7 +19,7 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
     const inputOptions: RollupOptions = {
       input: [packagePath],
       plugins: [
-        airdropResolverPlugin(importmap, options),
+        pkgdropResolverPlugin(importmap, options),
         (commonjs as any)(),
         options.optimize && terser()
       ]
@@ -30,9 +30,9 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
     return out.output[0].code;
   }
   
-  function airdropResolverPlugin(importmap: ImportMap, options: AirdropOptions): Plugin {
+  function pkgdropResolverPlugin(importmap: ImportMap, options: PkgdropOptions): Plugin {
     return {
-      name: 'airdrop-rollup',
+      name: 'pkgdrop-rollup',
       resolveId(importee: string, importer: string) {
         if ( /\0/.test( importee ) ) return;
         if ( !importer ) return;

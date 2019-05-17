@@ -1,8 +1,8 @@
 import { print, filesystem } from 'gluegun'; 
 
-import { AirdropOptions } from '../../lib/';
+import { PkgdropOptions } from '../../lib/';
 
-export async function cleanPackagePath(options: AirdropOptions) {
+export async function cleanPackagePath(options: PkgdropOptions) {
   const p = filesystem.path(options.package_path);
   if (p) {
     print.info(`Cleaning output directory`);

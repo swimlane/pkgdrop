@@ -83,7 +83,7 @@ exports[`cli tests add importmap 1`] = `
 `;
 
 exports[`cli tests init displays console messages 1`] = `
-"Writing airdrop.config.js
+"Writing pkgdrop.config.js
 Writing importmap
 Done! "
 `;
@@ -103,7 +103,7 @@ exports[`cli tests init file content 2`] = `
 `;
 
 exports[`cli tests pack displays console messages 1`] = `
-"Writing airdrop-pack-test.tgz
+"Writing pkgdrop-pack-test.tgz
 Done! "
 `;
 
@@ -126,7 +126,7 @@ exports[`cli tests pack importmap 1`] = `
 `;
 
 exports[`cli tests pack merge displays console messages 1`] = `
-"Extracting airdrop-pack-test.tgz
+"Extracting pkgdrop-pack-test.tgz
 Writing importmap
 Done! "
 `;

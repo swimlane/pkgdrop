@@ -2,21 +2,21 @@ import { GluegunToolbox } from 'gluegun';
 import * as cosmiconfig from 'cosmiconfig'
 import { dirname, join } from 'path';
 
-import { AirdropOptions } from '../../lib/';
+import { PkgdropOptions } from '../../lib/';
 
-export interface AirdropToolbox extends GluegunToolbox {
+export interface PkgdropToolbox extends GluegunToolbox {
   semver: null;
   system: null;
   prompt: null;
   http: null;
   template: null;
   patching: null;
-  getAirdropOptions: () => Promise<AirdropOptions>;
+  getPkgdropOptions: () => Promise<PkgdropOptions>;
 };
 
 interface CosmiConfig {
   filepath: string;
-  config: AirdropOptions
+  config: PkgdropOptions
 }
 
 export default async (toolbox: GluegunToolbox) => {
@@ -26,7 +26,7 @@ export default async (toolbox: GluegunToolbox) => {
   options.optimize = options.optimize || false;
   options.optimize = options.bundle || false;
 
-  toolbox.getAirdropOptions = async function  getAirdropOptions(): Promise<AirdropOptions> {
+  toolbox.getPkgdropOptions = async function  getPkgdropOptions(): Promise<PkgdropOptions> {
     const loader = cosmiconfig(brand);
 
     const local: CosmiConfig = options.config ?
@@ -41,7 +41,7 @@ export default async (toolbox: GluegunToolbox) => {
     }
 
     return {
-      ...config.airdrop,  // defaults
+      ...config.pkgdrop,  // defaults
       ...(local ? local.config : undefined),    // local
       ...options,         // command line
       config_path

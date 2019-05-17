@@ -6,7 +6,7 @@ import add from './commands/add';
  */
 export async function run(argv?: string[] | string): Promise<GluegunToolbox> {
   // create a CLI runtime
-  const cli = build('airdrop')
+  const cli = build('pkgdrop')
     .src(__dirname)
     .version()
     .exclude([

@@ -1,4 +1,4 @@
-import { AirdropToolbox } from '../extensions/load-location-config';
+import { PkgdropToolbox } from '../extensions/load-location-config';
 
 export default {
   name: 'config',
@@ -6,9 +6,9 @@ export default {
   description: 'Dispays current configuration',
   hidden: false,
   dashed: false,
-  run: async (toolbox: AirdropToolbox) => {
-    const { print, getAirdropOptions } = toolbox;
-    const options = await getAirdropOptions();
+  run: async (toolbox: PkgdropToolbox) => {
+    const { print, getPkgdropOptions } = toolbox;
+    const options = await getPkgdropOptions();
     print.info(JSON.stringify(options, null, 2));
   }
 };
