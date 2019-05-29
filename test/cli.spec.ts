@@ -124,6 +124,13 @@ describe('cli tests', () => {
       expect(await existsPkgdrop('lit-html@1.1.0')).toBe('dir');
       expect(await existsPkgdrop('importmap.json')).toBe('file');
     });
+
+    test.only('importmap should have latest', async () => {
+      await execPkgdrop(`add lit-element@1.1.0 --clean`);
+      await execPkgdrop(`add lit-element@1.0.0`);
+      const importmap = await readAsync(join(testPath, 'importmap.json'));
+      console.log({importmap});
+    });
   });
 
   describe('add --bundle', () => {
