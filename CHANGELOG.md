@@ -3,6 +3,7 @@ CHANGELOG
 
 ## HEAD (Unreleased)
 * By default fail when adding packages not found on npm
+* Fix major version aliasing in generated import maps
 
 --------------------
 

@@ -1,4 +1,4 @@
-import { readImportmap, writeImportmap, addMajorVersions  } from '../../lib/';
+import { readImportmap, writeImportmap, getMajorVersions  } from '../../lib/';
 import { PkgdropToolbox } from '../extensions/load-location-config';
 import { bundlePackages } from '../shared';
 
@@ -20,11 +20,10 @@ export default {
     const importmap = await readImportmap(options);
 
     const { imports } = await bundlePackages(packages, importmap, options);
-    Object.assign(importmap.imports, imports);
-
-    importmap.imports = addMajorVersions(importmap.imports);
 
     print.success(`Writing importmap`);
+    Object.assign(importmap.imports, imports);
+    Object.assign(importmap.imports, getMajorVersions(importmap.imports));
     await writeImportmap(importmap, options);
 
     time.done();

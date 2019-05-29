@@ -1,7 +1,18 @@
 import * as npa from 'npm-package-arg';
-import { satisfies, gt, major } from 'semver';
+import { maxVersion, major, maxSatisfying } from 'semver';
 
 import { Imports } from './importmaps';
+
+function getVersions(name: string, imports: Imports) {
+  const versions = [];
+  for (const k in imports) {
+    const spec = npa(k);
+    if (spec.type === 'version' && spec.name === name) {
+      versions.push(spec.saveSpec || spec.fetchSpec || spec.spec);
+    }
+  }
+  return versions;
+}
 
 export function expandLocalVersion(pkg: string, imports: Imports): string {
   const parsed = npa(pkg);
@@ -9,48 +20,41 @@ export function expandLocalVersion(pkg: string, imports: Imports): string {
   switch (parsed.type) {
     case 'version':
       return parsed.raw;
-    case 'range':
+    case 'tag': {
       const range = parsed.saveSpec || parsed.fetchSpec || parsed.spec;
-      for (const k in imports) {
-        const spec = npa(k);
-        if (spec.type === 'version' && spec.name === parsed.name) {
-          if (satisfies(spec.saveSpec || spec.fetchSpec || spec.spec, range)) return k;
-        }
-      }
-      return undefined;
-    case 'tag':
-      const parsedTag = parsed.saveSpec || parsed.fetchSpec || parsed.spec;
-      if (parsedTag !== 'latest') return undefined;
-      let version = null;
-      for (const k in imports) {
-        const spec = npa(k);
-        if (spec.type === 'version' && spec.name === parsed.name) {
-          if (!version || gt(spec, version)) version = (spec.saveSpec || spec.fetchSpec || spec.spec);
-        }
-      }
-      return `${parsed.name}@${version}`;
+      if (range !== 'latest') return undefined;
+      const versions = getVersions(parsed.name, imports);
+      const max = maxVersion(versions);
+      return `${parsed.name}@${max}`;
+    }
+    case 'range': {
+      const range = parsed.saveSpec || parsed.fetchSpec || parsed.spec;
+      const versions = getVersions(parsed.name, imports);
+      const max = maxSatisfying(versions, range);
+      return `${parsed.name}@${max}`;      
+    }
   }
 
   return undefined;
 }
 
-// Check if installed version is latest matching major version,
-// if so, add major version to the import map
-export function addMajorVersions(imports: Imports) {
+// Get Import map of latest major versions for each package in an import map.
+export function getMajorVersions(imports: Imports) {
+  const majorVersionsMap: Imports = {};
   imports = Object.assign({}, imports);
 
   for (const pkgId in imports) {
     const spec = npa(pkgId);
     if (spec.type === 'version') {
-      const m = major(spec.saveSpec || spec.fetchSpec || spec.spec);
-      const majorPkgId = `${spec.name}@${m}`;
-      const expanedMajor = expandLocalVersion(majorPkgId, imports);
-      if (pkgId === expanedMajor) {
-        imports[majorPkgId] = imports[pkgId];
-        imports[majorPkgId + '/'] = imports[pkgId + '/'];
-      }
+      const range = major(spec.saveSpec || spec.fetchSpec || spec.spec);
+      const versions = getVersions(spec.name, imports);
+      const max = maxSatisfying(versions, `^${range}`);
+      const majorPkgId = `${spec.name}@${range}`;
+      const latestPkgId = `${spec.name}@${max}`;
+      majorVersionsMap[majorPkgId] = imports[latestPkgId];
+      majorVersionsMap[majorPkgId + '/'] = imports[latestPkgId + '/'];
     }
   }
 
-  return imports;
+  return majorVersionsMap;
 }

@@ -1,7 +1,7 @@
 import * as tar from 'tar';
 
 import { PkgdropToolbox } from '../extensions/load-location-config';
-import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps, getMajorVersions } from '../../lib/';
 import { cleanPackagePath } from '../shared';
 
 const stream = require('stream');
@@ -56,7 +56,7 @@ export default {
     const addedImportmap = JSON.parse(cs.collect().toString('utf8'));
 
     const importmap = mergeImportmaps(inputImportmap, addedImportmap);
-    importmap.imports = addMajorVersions(importmap.imports);
+    Object.assign(importmap.imports, getMajorVersions(importmap.imports));
 
     print.success(`Writing importmap`);
     await writeImportmap(importmap, options);

@@ -1,4 +1,4 @@
-import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions, ImportMap } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps, getMajorVersions, ImportMap } from '../../lib/';
 import { PkgdropToolbox } from '../extensions/load-location-config';
 import { getMap, addPackages, bundlePackages, cleanPackagePath } from '../shared';
 
@@ -36,11 +36,11 @@ export default {
         addedImportmap = await bundlePackages(packages, mergeImportmaps(inputImportmap, addedImportmap), options);
       }
 
-      addedImportmap.imports = addMajorVersions(addedImportmap.imports);
-
       if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
         print.success(`Writing importmap`);
-        await writeImportmap(mergeImportmaps(inputImportmap, addedImportmap), options);
+        const merged = mergeImportmaps(inputImportmap, addedImportmap);
+        Object.assign(merged.imports, getMajorVersions(merged.imports));
+        await writeImportmap(merged, options);
       } else {
         print.warning(`No changes to importmap`);
       }
