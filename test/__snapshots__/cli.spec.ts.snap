@@ -6,7 +6,7 @@ Fetching package info for lit-element@2.1.0
 Bundling lit-element@2.1.0
 Writing bundle for lit-element@2.1.0
 Writing importmap
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests add --bundle displays console messages 1`] = `
@@ -15,12 +15,12 @@ Reading existing importmap
 Fetching package information for lit-element@2.1.0
 Fetching dependecy tree for lit-element@2.1.0
 Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.0.0
+Extracting tarball for lit-html@1.1.0
 Fetching package info for lit-element@2.1.0
 Bundling lit-element@2.1.0
 Writing bundle for lit-element@2.1.0
 Writing importmap
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests add --bundle importmap 1`] = `
@@ -36,11 +36,11 @@ exports[`cli tests add --bundle importmap 1`] = `
 exports[`cli tests add can clean 1`] = `
 "Cleaning output directory
 Reading existing importmap
-Fetching package information for lit-html@1.0.0
-Fetching dependecy tree for lit-html@1.0.0
-Extracting tarball for lit-html@1.0.0
+Fetching package information for lit-html@1.1.0
+Fetching dependecy tree for lit-html@1.1.0
+Extracting tarball for lit-html@1.1.0
 Writing importmap
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests add can force 1`] = `
@@ -48,9 +48,17 @@ exports[`cli tests add can force 1`] = `
 Fetching package information for lit-element@2.1.0
 Fetching dependecy tree for lit-element@2.1.0
 Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.0.0
+Extracting tarball for lit-html@1.1.0
 Writing importmap
-Done! "
+Done! [XX s]"
+`;
+
+exports[`cli tests add can force skip on missing packages 1`] = `
+"Reading existing importmap
+Fetching package information for @swimlane/pkgdrop@0.0.0
+Package @swimlane/pkgdrop@0.0.0 not found, skipping
+No changes to importmap
+Done! [XX s]"
 `;
 
 exports[`cli tests add displays console messages 1`] = `
@@ -59,9 +67,17 @@ Reading existing importmap
 Fetching package information for lit-element@2.1.0
 Fetching dependecy tree for lit-element@2.1.0
 Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.0.0
+Extracting tarball for lit-html@1.1.0
 Writing importmap
-Done! "
+Done! [XX s]"
+`;
+
+exports[`cli tests add fail on missing package 1`] = `
+"Reading existing importmap
+Fetching package information for @swimlane/pkgdrop@0.0.0
+Error: Package @swimlane/pkgdrop@0.0.0 not found
+	package may be private
+	use --force to skip missing packages [XX s]"
 `;
 
 exports[`cli tests add importmap 1`] = `
@@ -74,10 +90,10 @@ exports[`cli tests add importmap 1`] = `
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
     },
-    \\"lit-html@1.0.0\\": {}
+    \\"lit-html@1.1.0\\": {}
   }
 }"
 `;
@@ -85,7 +101,7 @@ exports[`cli tests add importmap 1`] = `
 exports[`cli tests init displays console messages 1`] = `
 "Writing pkgdrop.config.js
 Writing importmap
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests init file content 1`] = `
@@ -104,7 +120,7 @@ exports[`cli tests init file content 2`] = `
 
 exports[`cli tests pack displays console messages 1`] = `
 "Writing pkgdrop-pack-test.tgz
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests pack importmap 1`] = `
@@ -117,10 +133,10 @@ exports[`cli tests pack importmap 1`] = `
   },
   \\"scopes\\": {
     \\"lit-element@2.0.0\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
     },
-    \\"lit-html@1.0.0\\": {}
+    \\"lit-html@1.1.0\\": {}
   }
 }"
 `;
@@ -128,7 +144,7 @@ exports[`cli tests pack importmap 1`] = `
 exports[`cli tests pack merge displays console messages 1`] = `
 "Extracting pkgdrop-pack-test.tgz
 Writing importmap
-Done! "
+Done! [XX s]"
 `;
 
 exports[`cli tests pack merge importmap 1`] = `
@@ -143,13 +159,13 @@ exports[`cli tests pack merge importmap 1`] = `
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
     },
-    \\"lit-html@1.0.0\\": {},
+    \\"lit-html@1.1.0\\": {},
     \\"lit-element@2.0.0\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.0.0/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.0.0/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
     }
   }
 }"

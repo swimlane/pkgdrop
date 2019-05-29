@@ -9,8 +9,13 @@ const binFile = join(process.cwd(), '/bin/pkgdrop');
 
 async function execPkgdrop(command: string) {
   const commands = command.split(' ');
-  const result = await execa(binFile, [...commands, '--no-color']);
-  return result.stdout.replace(/\[.*s\]\n$/g, '');
+  let result: any;
+  try {
+    result = await execa(binFile, [...commands, '--no-color']);
+  } catch (e) {
+    result = e;
+  }
+  return result.stdout.trim().replace(/\[.*s\]$/g, '[XX s]');
 }
 
 async function existsPkgdrop(filename: string) {
@@ -84,7 +89,7 @@ describe('cli tests', () => {
 
     test('files exist', async () => {
       expect(await existsPkgdrop('lit-element@2.1.0')).toBe('dir');
-      expect(await existsPkgdrop('lit-html@1.0.0')).toBe('dir');
+      expect(await existsPkgdrop('lit-html@1.1.0')).toBe('dir');
       expect(await existsPkgdrop('importmap.json')).toBe('file');
     });
 
@@ -102,11 +107,21 @@ describe('cli tests', () => {
       expect(out).toMatchSnapshot();
     });
 
+    test('fail on missing package', async () => {
+      const out = await execPkgdrop(`add @swimlane/pkgdrop@0.0.0`);
+      expect(out).toMatchSnapshot();
+    });
+
+    test('can force skip on missing packages', async () => {
+      const out = await execPkgdrop(`add @swimlane/pkgdrop@0.0.0 --force`);
+      expect(out).toMatchSnapshot();
+    });
+
     test('can clean', async () => {
-      const out = await execPkgdrop(`add lit-html@1.0.0 --clean`);
+      const out = await execPkgdrop(`add lit-html@1.1.0 --clean`);
       expect(out).toMatchSnapshot();
       expect(await existsPkgdrop('lit-element@2.1.0')).toBe(false);
-      expect(await existsPkgdrop('lit-html@1.0.0')).toBe('dir');
+      expect(await existsPkgdrop('lit-html@1.1.0')).toBe('dir');
       expect(await existsPkgdrop('importmap.json')).toBe('file');
     });
   });
@@ -145,17 +160,17 @@ describe('cli tests', () => {
 
   describe('resolve', () => {
     beforeAll(async () => {
-      await execPkgdrop(`add lit-html@1.0.0`);
+      await execPkgdrop(`add lit-html@1.1.0`);
       await execPkgdrop(`add lit-element@2.1.0 --bundle`);
     }, TIMEOUT);
 
     test('displays resolved path', async () => {
-      const out = await execPkgdrop(`resolve lit-html@1.0.0 --offline`);
-      expect(out).toEqual('/-/lit-html@1.0.0/lit-html.js');
+      const out = await execPkgdrop(`resolve lit-html@1.1.0 --offline`);
+      expect(out).toEqual('/-/lit-html@1.1.0/lit-html.js');
     });
 
     test('displays not found when not added', async () => {
-      const out = await execPkgdrop(`resolve lit-element@1.0.0 --offline`);
+      const out = await execPkgdrop(`resolve lit-element@1.1.0 --offline`);
       expect(out).toEqual('Not found!');
     });
 

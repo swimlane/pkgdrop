@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* By default fail when adding packages not found on npm
 
 --------------------
 

@@ -1,4 +1,4 @@
-import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions } from '../../lib/';
+import { readImportmap, writeImportmap, mergeImportmaps, addMajorVersions, ImportMap } from '../../lib/';
 import { PkgdropToolbox } from '../extensions/load-location-config';
 import { getMap, addPackages, bundlePackages, cleanPackagePath } from '../shared';
 
@@ -21,8 +21,15 @@ export default {
     if (packages.length) {
       print.info(`Reading existing importmap`);
       const inputImportmap = await readImportmap(options);
-      const map = await getMap(packages, inputImportmap, options);
 
+      let map: ImportMap;
+      try {
+        map = await getMap(packages, inputImportmap, options);
+      } catch (e) {
+        time.fail(e);
+        return;
+      }
+      
       let addedImportmap = await addPackages(map, options);
 
       if (options.bundle) {

@@ -20,9 +20,7 @@ interface PackageLink {
 
 import { PackageInfo, Scopes, Imports, ImportMap, PkgdropOptions } from '../../lib/';
 
-
-
-export async function getMap(packages: string[], importmap: ImportMap, options: PkgdropOptions) {
+export async function getMap(packages: string[], importmap: ImportMap, options: PkgdropOptions): Promise<ImportMap> {
   const registry = 'http://registry.npmjs.org/';
   const npmconfig = read().concat({'full-metadata': true});
   
@@ -38,8 +36,11 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
     try {
       pkgInfo = await manifest(pkg, npmconfig);
     } catch (e) {
-      print.warning(`Package ${pkg} not found, skipping`);
-      return;
+      if (options.force) {
+        print.warning(`Package ${pkg} not found, skipping`);
+        return;
+      }
+      throw new Error(`Package ${pkg} not found\n\tpackage may be private\n\tuse --force to skip missing packages`);
     }
 
     const pkgId = `${pkgInfo.name}@${pkgInfo.version}`;
