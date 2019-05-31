@@ -37,6 +37,13 @@ export default {
 
     filesystem.dir(options.package_path);
 
+    if (options.dry) {
+      print.info(`Extracting ${file} [dry run]`);
+      print.success(`Writing importmap [dry run]`);
+      time.done();
+      return;
+    }
+
     print.info(`Extracting ${file}`);
 
     const cs = new CollectStream();
