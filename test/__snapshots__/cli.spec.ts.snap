@@ -99,7 +99,7 @@ exports[`cli tests add importmap 1`] = `
 `;
 
 exports[`cli tests add prints messages for peers 1`] = `
-"Cleaning output directory
+"Cleaning output directory [dry run]
 Reading existing importmap
 Fetching package information for @angular/core
 Fetching dependecy tree for @angular/core@8.0.0
