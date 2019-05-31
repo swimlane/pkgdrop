@@ -62,7 +62,7 @@ export default {
         name: 'ok',
         type: 'confirm',
         initial: true,
-        message: 'Is thsi OK?'
+        message: 'Is this OK?'
       };
 
       const { ok } = await prompt.ask(askOk);
@@ -75,13 +75,20 @@ export default {
       code = 'module.exports = ' + JSON.stringify(config, null, 2);
     }
 
-    print.info(`Writing pkgdrop.config.js`);
-    await filesystem.writeAsync(configPath, code);
+    if (options.dry) {
+      print.info(`Writing pkgdrop.config.js [dry run]`);
+    } else {
+      print.info(`Writing pkgdrop.config.js`);
+      await filesystem.writeAsync(configPath, code);      
+    }
 
     // tslint:disable-next-line:variable-name
     const package_path = join(dirname(configPath), config.package_path);
-    await filesystem.dirAsync(package_path);
-
+    
+    if (!options.dry) {
+      await filesystem.dirAsync(package_path);
+    }
+    
     // write importmap if none exists already
     const importmapPath = filesystem.path(package_path, 'importmap.json');
     if (!(await filesystem.existsAsync(importmapPath))) {
@@ -90,8 +97,12 @@ export default {
         scopes: {}
       };
 
-      print.success(`Writing importmap`);
-      await writeImportmap(importmap, { package_path });
+      if (options.dry) {
+        print.success(`Writing importmap [dry run]`);
+      } else {
+        print.success(`Writing importmap`);
+        await writeImportmap(importmap, { package_path });        
+      }
     }
 
     time.done();
