@@ -15,12 +15,16 @@ export default {
     const file = parameters.array.filter(Boolean)[0] || `pkgdrop-${new Date().toISOString()}.tgz`;
     const options = await getPkgdropOptions();
 
-    print.info(`Writing ${file}`)
-    await tar.create({
-      gzip: true,
-      file,
-      cwd: options.package_path
-    }, ['.']);
+    if (options.dry) {
+      print.info(`Writing ${file} [dry run]`);
+    } else {
+      print.info(`Writing ${file}`);
+      await tar.create({
+        gzip: true,
+        file,
+        cwd: options.package_path
+      }, ['.']);
+    }
 
     time.done();
   }
