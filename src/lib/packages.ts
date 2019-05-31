@@ -6,6 +6,8 @@ export interface PackageInfo {
   module?: string;
   browser?: string;
   main?: string;
+  dependencies: { [key: string] : string },
+  peerDependencies: { [key: string] : string }
 }
 
 export async function getLocalManifest(pkg: string, { package_path }: { package_path: string }): Promise<PackageInfo> {

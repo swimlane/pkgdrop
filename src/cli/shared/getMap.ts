@@ -5,6 +5,7 @@ import * as buildGraph from 'npmgraphbuilder';
 import { manifest, packument } from 'pacote';
 import { join } from 'path';
 import { read } from 'libnpmconfig';
+import { expandLocalVersion } from '../../lib';
 
 import { print } from 'gluegun'; 
 
@@ -28,6 +29,8 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
 
   const imports: Imports = {};
   const scopes: Scopes = {};
+
+  const peers = new Map<string, Set<string>>();
 
   const addScopes = packages.map(async (pkg) => {
     print.info(`Fetching package information for ${pkg}`);
@@ -67,6 +70,14 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
         return;
       }
 
+      if (n.data.peerDependencies) {
+        const peerSet = new Set<string>([]);
+        for (const k in n.data.peerDependencies) {
+          peerSet.add(`${k}@${n.data.peerDependencies[k]}`)
+        }
+        peers.set(pkgId, peerSet);
+      }
+
       scopes[n.id] = {};
 
       graph.forEachLinkedNode(n.id, (linkedNode: PackageNode, link: PackageLink) => {
@@ -82,6 +93,15 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
   });
 
   await Promise.all(addScopes);
+
+  peers.forEach((peerSet,pkg) => {
+    peerSet.forEach((peer: string) => {
+      const e = expandLocalVersion(peer, imports);
+      if (!e) {
+        print.warning(`${pkg} requires a peer of ${peer} but none is installed. You must pkgdrop peer dependencies yourself.`);
+      }
+    });
+  });
 
   return {
     imports,

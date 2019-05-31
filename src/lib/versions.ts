@@ -25,13 +25,13 @@ export function expandLocalVersion(pkg: string, imports: Imports): string {
       if (range !== 'latest') return undefined;
       const versions = getVersions(parsed.name, imports);
       const max = maxVersion(versions);
-      return `${parsed.name}@${max}`;
+      return max === null ? undefined : `${parsed.name}@${max}`;
     }
     case 'range': {
       const range = parsed.saveSpec || parsed.fetchSpec || parsed.spec;
       const versions = getVersions(parsed.name, imports);
       const max = maxSatisfying(versions, range);
-      return `${parsed.name}@${max}`;      
+      return max === null ? undefined : `${parsed.name}@${max}`;     
     }
   }
 
