@@ -132,6 +132,11 @@ describe('cli tests', () => {
       importmap = JSON.parse(importmap);
       expect(importmap.imports['lit-html@1']).toBe('/-/lit-html@1.1.0/lit-html.js');
     });
+
+    test('prints messages for peers', async () => {
+      const out = await execPkgdrop(`add @angular/core --clean --dry`);
+      expect(out).toMatchSnapshot();
+    });
   });
 
   describe('add --bundle', () => {

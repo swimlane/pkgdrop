@@ -7,4 +7,5 @@ export interface PkgdropOptions {
   optimize: boolean;
   clean: boolean;
   bundle: boolean;
+  dry: boolean;
 }

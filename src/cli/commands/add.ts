@@ -37,10 +37,14 @@ export default {
       }
 
       if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
-        print.success(`Writing importmap`);
-        const merged = mergeImportmaps(inputImportmap, addedImportmap);
-        Object.assign(merged.imports, getMajorVersions(merged.imports));
-        await writeImportmap(merged, options);
+        if (options.dry) {
+          print.success(`Writing importmap [dry run]`);
+        } else {
+          print.success(`Writing importmap`);
+          const merged = mergeImportmaps(inputImportmap, addedImportmap);
+          Object.assign(merged.imports, getMajorVersions(merged.imports));
+          await writeImportmap(merged, options);
+        }
       } else {
         print.warning(`No changes to importmap`);
       }

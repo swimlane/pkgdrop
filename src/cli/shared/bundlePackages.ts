@@ -11,27 +11,32 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
     print.info(`Fetching package info for ${pkg}`);
 
     const pkgId = expandLocalVersion(pkg, importmap.imports);
-    const pkgInfo = await getLocalManifest(pkgId, options);
 
-    const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
     const outputFilename = `${pkgId}.bundle.js`;
     const outputPath = join(options.package_path, outputFilename);
     const entryPath = join(options.package_root, outputFilename);
-
-    const packagePath = filesystem.path(options.package_path, pkgId, entryPoint);
 
     if (!options.force && filesystem.exists(outputPath)) {
       print.warning(`Bundle already exists at ${outputPath}, skipping`);
       return;
     }
 
+    imports[pkgId] = entryPath;
+
     print.info(`Bundling ${pkgId}`);
+
+    if (options.dry) {
+      print.success(`Writing bundle for ${pkgId} [dry run]`);
+      return;
+    }
+
+    const pkgInfo = await getLocalManifest(pkgId, options);
+    const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
+    const packagePath = filesystem.path(options.package_path, pkgId, entryPoint);
     const code = await genererateBundle(packagePath, importmap, options);
 
     print.success(`Writing bundle for ${pkgId}`);
     await filesystem.writeAsync(outputPath, code);
-
-    imports[pkgId] = entryPath;
   });
 
   await Promise.all(buildBundles);

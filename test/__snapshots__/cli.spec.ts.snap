@@ -98,6 +98,19 @@ exports[`cli tests add importmap 1`] = `
 }"
 `;
 
+exports[`cli tests add prints messages for peers 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for @angular/core
+Fetching dependecy tree for @angular/core@8.0.0
+@angular/core@8.0.0 requires a peer of rxjs@^6.4.0 but none is installed. You must pkgdrop peer dependencies yourself.
+@angular/core@8.0.0 requires a peer of zone.js@~0.9.1 but none is installed. You must pkgdrop peer dependencies yourself.
+Extracting tarball for @angular/core@8.0.0 [dry run]
+Extracting tarball for tslib@1.9.3 [dry run]
+Writing importmap [dry run]
+Done! [XX s]"
+`;
+
 exports[`cli tests init displays console messages 1`] = `
 "Writing pkgdrop.config.js
 Writing importmap

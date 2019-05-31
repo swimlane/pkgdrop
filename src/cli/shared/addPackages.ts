@@ -15,6 +15,10 @@ export async function addPackages(map: ImportMap, options: PkgdropOptions) {
 
 async function addPackage(pkg: string, options: PkgdropOptions) {
   const packagePath = filesystem.path(options.package_path, pkg);
+  if (options.dry) {
+    print.info(`Extracting tarball for ${pkg} [dry run]`);
+    return pkg;
+  }
   print.info(`Extracting tarball for ${pkg}`);
   await extract(pkg, packagePath, npmconfig);
   return pkg;
