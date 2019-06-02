@@ -40,7 +40,7 @@ pkgdrop add <package> [<package>] [--force] [--bundle] [--optimize] [--clean]
 * `--clean`: clean output directory before adding new packages
 * `--no-color`: disable CLI colors
 
-> The cli supports multiple packages and semantic version ranges.  For example `pkgdrop add lit-element es-module-shims@0.2.3` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
+> The cli supports multiple packages and semantic version ranges.  For example `pkgdrop add lit-element es-module-shims@0.2.7` will install the latest version of `lit-element` and an exact version of `es-module-shims`.
 
 Packages added using `pkgdrop <package>` are downloaded into a `<package_path>/<name>@<version>/` directory.  The same happens for each dependency of `<package>`.  An [import-map](https://github.com/WICG/import-maps) in the `<package_path>` directory is added or updated.
 
@@ -152,7 +152,7 @@ While most modern browsers include support for ES modules, bare package specifie
 > Note: import-maps are still an experimental specification.  Use [es-module-shims](https://github.com/guybedford/es-module-shims) to polyfill most of the newer modules specifications.  [SystemJS](https://github.com/systemjs/systemjs) also supports import-maps.  However, `SystemJS` only loads `System.register` modules or AMD modules via extras.
 
 ```html
-<script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
+<script type="module" src="/-/es-module-shims@0.2.7/dist/es-module-shims.js"></script>
 <script type="importmap-shim" src="/-/importmap.json"></script>
 <script type="module-shim">
   import { LitElement, css } from 'lit-element@2.1.0';
@@ -191,7 +191,7 @@ Bundles can also be imported using fixed versions or bare imports when combined 
 ```
 
 ```html
-<script type="module" src="/-/es-module-shims@0.2.3/dist/es-module-shims.js"></script>
+<script type="module" src="/-/es-module-shims@0.2.7/dist/es-module-shims.js"></script>
 <script type="importmap-shim" src="/-/importmap.json"></script>
 <script type="module-shim">
     import * as d3 from 'd3@5.9.2';
