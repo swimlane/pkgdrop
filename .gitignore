@@ -4,3 +4,4 @@ node_modules
 /demo/-
 .vscode
 Dockerfile
+__tempdir__

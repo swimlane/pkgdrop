@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`init displays console messages 1`] = `
+"Writing pkgdrop.config.js
+Writing importmap
+Done! [XX s]"
+`;
+
+exports[`init file content 1`] = `
+"{
+  \\"imports\\": {},
+  \\"scopes\\": {}
+}"
+`;
+
+exports[`init file content 2`] = `
+"module.exports = {
+  \\"package_path\\": \\"./-/\\",
+  \\"package_root\\": \\"/-/\\"
+}"
+`;

@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`add can clean 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for lit-html@1.1.0
+Fetching dependecy tree for lit-html@1.1.0
+Extracting tarball for lit-html@1.1.0
+Writing importmap
+Done! [XX s]"
+`;
+
+exports[`add can force 1`] = `
+"Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0
+Extracting tarball for lit-html@1.1.0
+Writing importmap
+Done! [XX s]"
+`;
+
+exports[`add can force skip on missing packages 1`] = `
+"Reading existing importmap
+Fetching package information for @swimlane/pkgdrop@0.0.0
+Package @swimlane/pkgdrop@0.0.0 not found, skipping
+No changes to importmap
+Done! [XX s]"
+`;
+
+exports[`add displays console messages 1`] = `
+"Cleaning output directory
+Reading existing importmap
+Fetching package information for lit-element@2.1.0
+Fetching dependecy tree for lit-element@2.1.0
+Extracting tarball for lit-element@2.1.0
+Extracting tarball for lit-html@1.1.0
+Writing importmap
+Done! [XX s]"
+`;
+
+exports[`add fail on missing package 1`] = `
+"Reading existing importmap
+Fetching package information for @swimlane/pkgdrop@0.0.0
+Error: Package @swimlane/pkgdrop@0.0.0 not found
+	package may be private
+	use --force to skip missing packages [XX s]"
+`;
+
+exports[`add importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
+    },
+    \\"lit-html@1.1.0\\": {}
+  }
+}"
+`;
+
+exports[`add prints messages for peers 1`] = `
+"Cleaning output directory [dry run]
+Reading existing importmap
+Fetching package information for @angular/core
+Fetching dependecy tree for @angular/core@8.0.0
+@angular/core@8.0.0 requires a peer of rxjs@^6.4.0 but none is installed. You must pkgdrop peer dependencies yourself.
+@angular/core@8.0.0 requires a peer of zone.js@~0.9.1 but none is installed. You must pkgdrop peer dependencies yourself.
+Extracting tarball for @angular/core@8.0.0 [dry run]
+Extracting tarball for tslib@1.9.3 [dry run]
+Writing importmap [dry run]
+Done! [XX s]"
+`;

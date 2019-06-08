@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pack displays console messages 1`] = `
+"Writing pkgdrop-pack-test.tgz
+Done! [XX s]"
+`;
+
+exports[`pack importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.0.0\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2.0.0/\\": \\"/-/lit-element@2.0.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.0.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.0.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
+    },
+    \\"lit-html@1.1.0\\": {}
+  }
+}"
+`;
+
+exports[`pack merge displays console messages 1`] = `
+"Extracting pkgdrop-pack-test.tgz
+Writing importmap
+Done! [XX s]"
+`;
+
+exports[`pack merge importmap 1`] = `
+"{
+  \\"imports\\": {
+    \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0/lit-element.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2.0.0\\": \\"/-/lit-element@2.0.0/lit-element.js\\",
+    \\"lit-element@2.0.0/\\": \\"/-/lit-element@2.0.0/\\"
+  },
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
+    },
+    \\"lit-html@1.1.0\\": {},
+    \\"lit-element@2.0.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
+    }
+  }
+}"
+`;
