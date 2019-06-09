@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`add --bundle can force 1`] = `
+exports[`bundle can force 1`] = `
 "Reading existing importmap
 Fetching package info for lit-element@2.1.0
 Bundling lit-element@2.1.0
@@ -9,13 +9,8 @@ Writing importmap
 Done! [XX s]"
 `;
 
-exports[`add --bundle displays console messages 1`] = `
-"Cleaning output directory
-Reading existing importmap
-Fetching package information for lit-element@2.1.0
-Fetching dependecy tree for lit-element@2.1.0
-Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.1.0
+exports[`bundle displays console messages 1`] = `
+"Reading existing importmap
 Fetching package info for lit-element@2.1.0
 Bundling lit-element@2.1.0
 Writing bundle for lit-element@2.1.0
@@ -23,12 +18,20 @@ Writing importmap
 Done! [XX s]"
 `;
 
-exports[`add --bundle importmap 1`] = `
+exports[`bundle importmap 1`] = `
 "{
   \\"imports\\": {
     \\"lit-element@2.1.0\\": \\"/-/lit-element@2.1.0.bundle.js\\",
-    \\"lit-element@2\\": \\"/-/lit-element@2.1.0.bundle.js\\"
+    \\"lit-element@2.1.0/\\": \\"/-/lit-element@2.1.0/\\",
+    \\"lit-element@2\\": \\"/-/lit-element@2.1.0.bundle.js\\",
+    \\"lit-element@2/\\": \\"/-/lit-element@2.1.0/\\"
   },
-  \\"scopes\\": {}
+  \\"scopes\\": {
+    \\"lit-element@2.1.0\\": {
+      \\"lit-html\\": \\"/-/lit-html@1.1.0/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.1.0/\\"
+    },
+    \\"lit-html@1.1.0\\": {}
+  }
 }"
 `;

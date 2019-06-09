@@ -1,4 +1,5 @@
 import { createSandbox } from './cli.util';
+import * as nock from 'nock';
 
 const TIMEOUT = 100000;
 
@@ -10,6 +11,7 @@ describe('pack', () => {
     sandbox = await createSandbox();
     await sandbox.exec(`init -y --offline`);
     await sandbox.exec(`add lit-element@2.0.0 --clean`);
+    nock.disableNetConnect();
     output = await sandbox.exec(`pack pkgdrop-pack-test.tgz`);
   }, TIMEOUT);
 

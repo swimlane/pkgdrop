@@ -13,6 +13,7 @@
     "pretest": "rimraf ./test/__tempdir__/",
     "test": "jest",
     "test:watch": "jest --watch",
+    "pretest:cov": "rimraf ./test/__tempdir__/",
     "test:cov": "jest --coverage",
     "demo:setup": "npm run demo:setup:pkgs && npm run demo:setup:bundles",
     "demo:setup:pkgs": "./bin/pkgdrop add es-module-shims@0.2.7 lit-html@1 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --config ./demo/pkgdrop.config.js",

@@ -34,6 +34,7 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
     return {
       name: 'pkgdrop-rollup',
       resolveId(importee: string, importer: string) {
+        /* istanbul ignore next */
         if ( /\0/.test( importee ) ) return;
         if ( !importer ) return;
   
@@ -44,6 +45,7 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
         const secondIndex = importer.indexOf('/', firstIndex + 1);
         const scope = importer.slice(firstIndex + 1, secondIndex);
 
+        /* istanbul ignore next */
         if (!importmap.scopes[scope]) return;
   
         const resolveId = createResolver(importmap.scopes[scope]);

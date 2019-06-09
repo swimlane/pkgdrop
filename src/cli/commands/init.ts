@@ -30,7 +30,7 @@ export default {
       // noop
     }
 
-    let code;
+    let code: string;
     if (!options.y) {  // prompt user for config values
       print.info(`Let's walk through creating a pkgdrop.config.json file.`);
 

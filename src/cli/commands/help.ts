@@ -1,10 +1,12 @@
+import { PkgdropToolbox } from '../extensions/load-location-config';
+
 export default {
   name: 'help',
   alias: 'h',
   description: 'This help text',
   dashed: true,
   hidden: true,
-  run: toolbox => {
+  run: (toolbox: PkgdropToolbox) => {
     const { runtime: { brand }, print: { info, newline, printCommands } } = toolbox
     info(`${brand} version ${toolbox.meta.version()}`);
     newline();

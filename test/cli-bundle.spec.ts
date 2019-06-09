@@ -1,15 +1,18 @@
 import { createSandbox } from './cli.util';
+import * as nock from 'nock';
 
 const TIMEOUT = 100000;
 
-describe('add --bundle', () => {
+describe('bundle', () => {
   let output: string;
   let sandbox: any;
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    await sandbox.exec(`init -y --offline`);
-    output = await sandbox.exec(`add lit-element@2.1.0 --clean --bundle`);
+    await sandbox.exec(`init -y`);
+    await sandbox.exec(`add lit-element@2.1.0 --clean`);
+    nock.disableNetConnect();
+    output = await sandbox.exec(`bundle lit-element@2.1.0`);
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -30,13 +33,13 @@ describe('add --bundle', () => {
   });
 
   test('can\'t bundle again', async () => {
-    const out = await sandbox.exec(`bundle lit-element@2.1.0 --offline`);
+    const out = await sandbox.exec(`bundle lit-element@2.1.0`);
     expect(out).toContain('Bundle already exists');
     expect(out).toContain('skipping');
   }, 30000);
 
-  test.skip('can force', async () => {
-    const out = await sandbox.exec(`bundle lit-element@2.1.0 --force --offline`);
+  test('can force', async () => {
+    const out = await sandbox.exec(`bundle lit-element@2.1.0 --force`);
     expect(out).toMatchSnapshot();
   }, TIMEOUT);
 });
