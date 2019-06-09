@@ -28,10 +28,18 @@ describe('meta commands', () => {
   });
 
   test('clean', async () => {
-    const out = await sandbox.exec(`--clean`);
+    expect(await sandbox.exists('-/importmap.json')).toBe('file');
+    const out = await sandbox.exec(`clean`);
     expect(out).toContain('Cleaning output directory');
-    expect(out).toContain('No packages specified');
     expect(await sandbox.exists('-/importmap.json')).toBe(false);
+  });
+
+  test('clean dry run', async () => {
+    await sandbox.exec(`init -y`);
+    expect(await sandbox.exists('-/importmap.json')).toBe('file');
+    const out = await sandbox.exec(`clean --dry`);
+    expect(out).toContain('Cleaning output directory');
+    expect(await sandbox.exists('-/importmap.json')).toBe('file');
   });
 
   test('config', async () => {

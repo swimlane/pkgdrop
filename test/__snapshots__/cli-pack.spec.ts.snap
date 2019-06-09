@@ -5,6 +5,11 @@ exports[`pack displays console messages 1`] = `
 Done! [XX s]"
 `;
 
+exports[`pack dryrun 1`] = `
+"Writing pkgdrop-pack-test.tgz [dry run]
+Done! [XX s]"
+`;
+
 exports[`pack importmap 1`] = `
 "{
   \\"imports\\": {

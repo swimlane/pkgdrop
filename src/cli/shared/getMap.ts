@@ -53,7 +53,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
       return;
     }
 
-    const entryPoint = pkgInfo.module || pkgInfo.main || 'index.js';
+    const entryPoint = /* istanbul ignore next */ pkgInfo.module || pkgInfo.main || 'index.js';
     const outputPath = join(options.package_root, pkgId, '/');
     const entryPath = join(outputPath, entryPoint);
 
@@ -83,7 +83,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
       graph.forEachLinkedNode(n.id, (linkedNode: PackageNode, link: PackageLink) => {
         if (link.fromId === n.id) {
           const name = linkedNode.data.name;
-          const ep = linkedNode.data.module || linkedNode.data.main || 'index.js';
+          const ep = /* istanbul ignore next */ linkedNode.data.module || linkedNode.data.main || 'index.js';
 
           scopes[n.id][name] = join(options.package_root, link.toId, ep);
           scopes[n.id][name + '/'] = join(options.package_root, link.toId, '/');
@@ -114,7 +114,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
       .then((d: any) => {
         Object.keys(d.versions).forEach(k => {
           const v = d.versions[k];
-          v._id = v._id || `${v.name}@${v.version}`;  // For some reason this is missing on private packages.
+          v._id = v._id /* istanbul ignore next */ || `${v.name}@${v.version}`;  // For some reason this is missing on private packages.
         });
         return { data: d };
       });

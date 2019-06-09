@@ -50,4 +50,15 @@ describe('pack', () => {
       expect(await sandbox.read('-/importmap.json')).toMatchSnapshot();
     });
   });
+
+  test('dryrun', async () => {
+    await sandbox.clean();
+    sandbox = await createSandbox();
+    nock.enableNetConnect();
+    await sandbox.exec(`add lit-element@2.0.0 --clean`);
+    nock.disableNetConnect();
+    output = await sandbox.exec(`pack pkgdrop-pack-test.tgz --dry`);
+    expect(output).toMatchSnapshot();
+    expect(await sandbox.exists('pkgdrop-pack-test.tgz')).toBe(false);
+  });
 });

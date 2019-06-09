@@ -20,8 +20,6 @@ export async function execPkgdrop(command: string) {
   return result.stdout.trim().replace(/\[.*s\]$/g, '[XX s]');
 }
 
-const { log, warn, error } = global.console;
-
 export async function createSandbox() {
   const cwd = join(__dirname, `__tempdir__/test-${short.generate()}/`);
   await dir(cwd);
@@ -39,23 +37,16 @@ export async function createSandbox() {
     },
     async exec(command: string) {
       const commands = command.split(' ');
-      let result: any;
-      const logSpy = [];
-      global.console.log = global.console.log = global.console.warn = (...args) => logSpy.push(args);
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => ({}));
       try {
         process.chdir(cwd);
         await run(commands);
-        result = logSpy.join('\n'); // await execa(binFile, [...commands, '--no-color']);
       } catch (e) {
         // noop
       }
-      result = logSpy.join('\n');
-      Object.assign(global.console, {
-        log,
-        warn,
-        error
-      });
-      return stripANSI(result).trim().replace(/\[.*s\]$/g, '[XX s]');
+      const calls = logSpy.mock.calls;
+      logSpy.mockRestore();
+      return stripANSI(calls.join('\n')).trim().replace(/\[.*s\]$/g, '[XX s]');
     }
   }
 }

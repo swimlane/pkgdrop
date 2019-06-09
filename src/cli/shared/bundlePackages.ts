@@ -32,7 +32,7 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
     }
 
     const pkgInfo = await getLocalManifest(pkgId, options);
-    const entryPoint = pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
+    const entryPoint = /* istanbul ignore next */ pkgInfo.module || pkgInfo.browser || pkgInfo.main || 'index.js';
     const packagePath = filesystem.path(options.package_path, pkgId, entryPoint);
     const code = await genererateBundle(packagePath, importmap, options);
 
