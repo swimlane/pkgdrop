@@ -7,8 +7,7 @@ export default (toolbox: GluegunToolbox) => {
     start () {
       const timer = system.startTimer();
       return {
-        /* istanbul ignore next */ 
-        done(msg = 'Done!') {
+        done(msg = /* istanbul ignore next */ 'Done!') {
           const elapsed = (timer() / 1000).toFixed(2);
           const time = print.colors.muted(`[${elapsed} s]`);
           print.success(`${msg} ${time}\n`);
