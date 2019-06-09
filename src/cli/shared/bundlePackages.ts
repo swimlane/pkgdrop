@@ -25,6 +25,7 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
 
     print.info(`Bundling ${pkgId}`);
 
+    /* istanbul ignore if  */
     if (options.dry) {
       print.success(`Writing bundle for ${pkgId} [dry run]`);
       return;

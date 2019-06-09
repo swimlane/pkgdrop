@@ -15,6 +15,7 @@ export default {
     const file = parameters.array.filter(Boolean)[0] || `pkgdrop-${new Date().toISOString()}.tgz`;
     const options = await getPkgdropOptions();
 
+    /* istanbul ignore if  */
     if (options.dry) {
       print.info(`Writing ${file} [dry run]`);
     } else {

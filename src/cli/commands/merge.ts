@@ -37,6 +37,7 @@ export default {
 
     filesystem.dir(options.package_path);
 
+    /* istanbul ignore if  */
     if (options.dry) {
       print.info(`Extracting ${file} [dry run]`);
       print.success(`Writing importmap [dry run]`);

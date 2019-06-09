@@ -5,6 +5,7 @@ import { PkgdropOptions } from '../../lib/';
 export async function cleanPackagePath(options: PkgdropOptions) {
   const p = filesystem.path(options.package_path);
   if (p) {
+    /* istanbul ignore if  */
     if (options.dry) {
       print.info(`Cleaning output directory [dry run]`);
     } else {

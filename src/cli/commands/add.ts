@@ -37,6 +37,7 @@ export default {
       }
 
       if (Object.keys(addedImportmap.imports).length > 0 || Object.keys(addedImportmap.scopes).length > 0) {
+        /* istanbul ignore if  */
         if (options.dry) {
           print.success(`Writing importmap [dry run]`);
         } else {

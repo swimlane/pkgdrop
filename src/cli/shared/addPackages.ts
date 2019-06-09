@@ -15,6 +15,7 @@ export async function addPackages(map: ImportMap, options: PkgdropOptions) {
 
 async function addPackage(pkg: string, options: PkgdropOptions) {
   const packagePath = filesystem.path(options.package_path, pkg);
+  /* istanbul ignore if  */
   if (options.dry) {
     print.info(`Extracting tarball for ${pkg} [dry run]`);
     return pkg;

@@ -75,6 +75,7 @@ export default {
       code = 'module.exports = ' + JSON.stringify(config, null, 2);
     }
 
+    /* istanbul ignore if  */
     if (options.dry) {
       print.info(`Writing pkgdrop.config.js [dry run]`);
     } else {
