@@ -11,12 +11,13 @@ export default (toolbox: GluegunToolbox) => {
           const elapsed = (timer() / 1000).toFixed(2);
           const time = print.colors.muted(`[${elapsed} s]`);
           print.success(`${msg} ${time}\n`);
+          process.exitCode = 0;
         },
         fail(msg = 'Error!') {
           const elapsed = (timer() / 1000).toFixed(2);
           const time = print.colors.muted(`[${elapsed} s]`);
           print.error(`${msg} ${time}\n`);
-          process.exit(1);
+          process.exitCode = 1;
         }
       }
     }

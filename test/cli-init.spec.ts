@@ -1,4 +1,7 @@
-import { createSandbox, execPkgdrop } from './cli.util';
+import { createSandbox } from './cli.util';
+import * as nock from 'nock';
+
+nock.disableNetConnect();
 
 describe('init', () => {
   let output: string;
@@ -6,11 +9,11 @@ describe('init', () => {
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    output = await execPkgdrop(`init -y --offline`);
+    output = await sandbox.exec(`init -y`);
   });
 
   afterAll(async () => {
-    sandbox.clean();
+    await sandbox.clean();
   });
 
   test('displays console messages', () => {

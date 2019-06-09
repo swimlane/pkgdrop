@@ -77,7 +77,10 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
   },
   "bin": {
     "pkgdrop": "./bin/pkgdrop"

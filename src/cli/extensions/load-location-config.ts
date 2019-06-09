@@ -37,6 +37,7 @@ export default async (toolbox: GluegunToolbox) => {
     const config_path = local ? local.filepath : undefined;
 
     if (local) {
+      local.config = { ...local.config };  // cosmic returns the same mutable config!!!
       local.config.package_path = join(dirname(config_path), local.config.package_path);
     }
 

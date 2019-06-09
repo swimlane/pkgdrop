@@ -1,4 +1,4 @@
-import { createSandbox, execPkgdrop } from './cli.util';
+import { createSandbox } from './cli.util';
 
 const TIMEOUT = 100000;
 
@@ -8,13 +8,13 @@ describe('pack', () => {
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    await execPkgdrop(`init -y --offline`);
-    await execPkgdrop(`add lit-element@2.0.0 --clean`);
-    output = await execPkgdrop(`pack pkgdrop-pack-test.tgz`);
+    await sandbox.exec(`init -y --offline`);
+    await sandbox.exec(`add lit-element@2.0.0 --clean`);
+    output = await sandbox.exec(`pack pkgdrop-pack-test.tgz`);
   }, TIMEOUT);
 
   afterAll(async () => {
-    sandbox.clean();
+    await sandbox.clean();
   }, TIMEOUT);
 
   test('displays console messages', () => {
@@ -31,8 +31,8 @@ describe('pack', () => {
 
   describe('merge', () => {
     beforeAll(async () => {
-      await execPkgdrop(`add lit-element@2.1.0 --clean`);
-      output = await execPkgdrop(`merge pkgdrop-pack-test.tgz`);
+      await sandbox.exec(`add lit-element@2.1.0 --clean`);
+      output = await sandbox.exec(`merge pkgdrop-pack-test.tgz`);
     }, TIMEOUT);
 
     test('displays console messages', () => {

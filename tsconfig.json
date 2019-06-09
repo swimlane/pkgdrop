@@ -15,7 +15,8 @@
     "strict": false,
     "target": "es5",
     "pretty": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/fixtures", "src/**/*.test.ts"]
