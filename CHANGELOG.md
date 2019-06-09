@@ -6,6 +6,7 @@ CHANGELOG
 * Fix major version aliasing in generated import maps
 * Print message for missing peer dependencies
 * Add `--dry` option for dry run.
+* Removed `--offline` flag (only used for testing)
 
 --------------------
 

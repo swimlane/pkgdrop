@@ -8,7 +8,7 @@ describe('add', () => {
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    await sandbox.exec(`init -y --offline`);
+    await sandbox.exec(`init -y`);
     output = await sandbox.exec(`add lit-element@2.1.0 --clean`);
   }, TIMEOUT);
 

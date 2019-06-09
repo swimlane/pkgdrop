@@ -10,7 +10,7 @@ describe('meta commands', () => {
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    await sandbox.exec(`init -y --offline`);
+    await sandbox.exec(`init -y`);
   });
 
   afterAll(async () => {

@@ -9,7 +9,7 @@ describe('pack', () => {
 
   beforeAll(async () => {
     sandbox = await createSandbox();
-    await sandbox.exec(`init -y --offline`);
+    await sandbox.exec(`init -y`);
     await sandbox.exec(`add lit-element@2.0.0 --clean`);
     nock.disableNetConnect();
     output = await sandbox.exec(`pack pkgdrop-pack-test.tgz`);
