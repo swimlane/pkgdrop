@@ -13,7 +13,7 @@ describe('add', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    sandbox.clean();
+    await sandbox.clean();
   });
 
   test('displays console messages', async () => {

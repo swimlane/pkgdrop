@@ -2,6 +2,7 @@ import { join } from 'path';
 
 import * as execa from 'execa';
 import { existsAsync, readAsync, removeAsync, dir } from 'fs-jetpack';
+import * as short from 'short-uuid';
 
 const binFile = join(__dirname, '../bin/pkgdrop');
 
@@ -17,7 +18,7 @@ export async function execPkgdrop(command: string) {
 }
 
 export async function createSandbox() {
-  const cwd = join(__dirname, `__tempdir__/test-${getRandomInteger()}/`);
+  const cwd = join(__dirname, `__tempdir__/test-${short.generate()}/`);
   await dir(cwd);
   process.chdir(cwd);
 
@@ -32,10 +33,4 @@ export async function createSandbox() {
       return removeAsync(cwd);
     }
   }
-}
-
-// https://stackoverflow.com/a/1527820
-function getRandomInteger(min: number = 1, max: number = 100000) {
-  const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
-  return randomInteger;
 }
