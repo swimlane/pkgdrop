@@ -68,12 +68,12 @@ exports[`add importmap 1`] = `
 exports[`add prints messages for peers 1`] = `
 "Cleaning output directory [dry run]
 Reading existing importmap
-Fetching package information for @angular/core
-Fetching dependecy tree for @angular/core@8.0.0
-@angular/core@8.0.0 requires a peer of rxjs@^6.4.0 but none is installed. You must pkgdrop peer dependencies yourself.
-@angular/core@8.0.0 requires a peer of zone.js@~0.9.1 but none is installed. You must pkgdrop peer dependencies yourself.
-Extracting tarball for @angular/core@8.0.0 [dry run]
-Extracting tarball for tslib@1.9.3 [dry run]
+Fetching package information for @angular/core@7.0.0
+Fetching dependecy tree for @angular/core@7.0.0
+@angular/core@7.0.0 requires a peer of rxjs@^6.0.0 but none is installed. You must pkgdrop peer dependencies yourself.
+@angular/core@7.0.0 requires a peer of zone.js@~0.8.26 but none is installed. You must pkgdrop peer dependencies yourself.
+Extracting tarball for @angular/core@7.0.0 [dry run]
+Extracting tarball for tslib@1.10.0 [dry run]
 Writing importmap [dry run]
 Done! [XX s]"
 `;

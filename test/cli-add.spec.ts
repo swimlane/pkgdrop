@@ -78,7 +78,7 @@ describe('add', () => {
   }, TIMEOUT);
 
   test('prints messages for peers', async () => {
-    const out = await sandbox.exec(`add @angular/core --clean --dry`);
+    const out = await sandbox.exec(`add @angular/core@7.0.0 --clean --dry`);
     expect(out).toMatchSnapshot();
     expect(process.exitCode).toBeFalsy();
   });
