@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Disable registry cache to fix issues with missing metadata
 
 --------------------
 

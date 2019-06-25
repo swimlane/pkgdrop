@@ -23,7 +23,10 @@ import { PackageInfo, Scopes, Imports, ImportMap, PkgdropOptions } from '../../l
 
 export async function getMap(packages: string[], importmap: ImportMap, options: PkgdropOptions): Promise<ImportMap> {
   const registry = 'http://registry.npmjs.org/';
-  const npmconfig = read().concat({'full-metadata': true});
+  const npmconfig = read().concat({
+    fullMetadata: true,
+    cache: false
+  });
   
   const { createNpmDependenciesGraph } = buildGraph(httpClient, registry);
 
@@ -31,6 +34,8 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
   const scopes: Scopes = {};
 
   const peers = new Map<string, Set<string>>();
+
+  // await clearMemoized();
 
   const addScopes = packages.map(async (pkg) => {
     print.info(`Fetching package information for ${pkg}`);
