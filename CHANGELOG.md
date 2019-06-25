@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Disable registry cache to fix issues with missing metadata
+_(none)_
 
 --------------------
+
+## 3.0.1 (2019-06-25)
+* Disable registry cache to fix issues with missing metadata
 
 ## 3.0.0 (2019-06-12)
 * By default fail when adding packages not found on npm
