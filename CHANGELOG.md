@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Force scopes to have trailing slash (see https://github.com/systemjs/systemjs/pull/2009)
 
 --------------------
 
