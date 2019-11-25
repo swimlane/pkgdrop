@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Force scopes to have trailing slash (see https://github.com/systemjs/systemjs/pull/2009)
+_(none)_
 
 --------------------
+
+## 4.0.0 (2019-11-25)
+* Force scopes to have trailing slash (see https://github.com/systemjs/systemjs/pull/2009)
 
 ## 3.0.1 (2019-06-25)
 * Disable registry cache to fix issues with missing metadata
