@@ -8,7 +8,7 @@ import { ImportMap, PkgdropOptions } from '../../lib/';
 const npmconfig = require('libnpmconfig').read();
 
 export async function addPackages(map: ImportMap, options: PkgdropOptions) {
-  const packages = Object.keys(map.scopes);
+  const packages = Object.keys(map.scopes).map(s => s.replace(/\/$/, ''));
   await Promise.all(packages.map(pkg => addPackage(pkg, options)));
   return map;
 }

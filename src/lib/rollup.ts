@@ -43,7 +43,7 @@ export async function genererateBundle(packagePath: string, importmap: ImportMap
   
         const firstIndex = importer.indexOf('/');
         const secondIndex = importer.indexOf('/', firstIndex + 1);
-        const scope = importer.slice(firstIndex + 1, secondIndex);
+        const scope = importer.slice(firstIndex + 1, secondIndex + 1);
 
         /* istanbul ignore next */
         if (!importmap.scopes[scope]) return;

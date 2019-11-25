@@ -70,8 +70,10 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
     const graph = await createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
 
     graph.forEachNode((n: PackageNode) => {
-      if (!options.force && importmap.scopes[n.id]) {
-        print.warning(`Scopes for ${n.id} already exists, skipping`);
+      const scopeId = join(n.id, '/');
+
+      if (!options.force && importmap.scopes[scopeId]) {
+        print.warning(`Scopes for ${scopeId} already exists, skipping`);
         return;
       }
 
@@ -83,15 +85,15 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
         peers.set(pkgId, peerSet);
       }
 
-      scopes[n.id] = {};
+      scopes[scopeId] = {};
 
       graph.forEachLinkedNode(n.id, (linkedNode: PackageNode, link: PackageLink) => {
         if (link.fromId === n.id) {
           const name = linkedNode.data.name;
           const ep = /* istanbul ignore next */ linkedNode.data.module || linkedNode.data.main || 'index.js';
 
-          scopes[n.id][name] = join(options.package_root, link.toId, ep);
-          scopes[n.id][name + '/'] = join(options.package_root, link.toId, '/');
+          scopes[scopeId][name] = join(options.package_root, link.toId, ep);
+          scopes[scopeId][name + '/'] = join(options.package_root, link.toId, '/');
         }
       });
     });
