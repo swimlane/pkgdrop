@@ -25,7 +25,7 @@
   "dependencies": {
     "cosmiconfig": "^5.2.0",
     "fs-jetpack": "^2.2.3",
-    "gluegun": "^3.3.0",
+    "gluegun": "^4.1.2",
     "libnpmconfig": "^1.2.1",
     "ngraph.graph": "0.0.18",
     "npm-package-arg": "^6.1.0",
