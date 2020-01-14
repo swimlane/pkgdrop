@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Fix missing dependeny in last pub
+_(none)_
 
 --------------------
+
+## 4.0.1 (2020-01-14)
+* Fix missing dependeny in last pub
 
 ## 4.0.0 (2019-11-25)
 * Force scopes to have trailing slash (see https://github.com/systemjs/systemjs/pull/2009)
