@@ -2,25 +2,73 @@
   "name": "@swimlane/pkgdrop",
   "version": "4.0.1",
   "description": "package-drop",
-  "author": "J. Harshbarger",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swimlane/pkgdrop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/swimlane/pkgdrop/issues"
+  },
+  "homepage": "https://github.com/swimlane/pkgdrop#readme",
+  "author": "J. Harshbarger",
+  "keywords": [
+    "packages",
+    "modules"
+  ],
+  "bin": {
+    "pkgdrop": "./bin/pkgdrop"
+  },
+  "files": [
+    "build",
+    "bin"
+  ],
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "demo:setup": "./bin/pkgdrop --clean --config ./demo/pkgdrop.config.js && npm run demo:setup:pkgs && npm run demo:setup:bundles",
+    "demo:setup:bundles": "./bin/pkgdrop add d3@5.9.2 --bundle --optimize --config ./demo/pkgdrop.config.js",
+    "demo:setup:pkgs": "./bin/pkgdrop add es-module-shims@0.4.6 lit-html@1 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --config ./demo/pkgdrop.config.js",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "np": "np",
+    "prepublishOnly": "rimraf ./dist && npm run build",
     "prestart": "npm run demo:setup",
     "start": "live-server ./demo/",
     "pretest": "rimraf ./test/__tempdir__/",
     "test": "jest --verbose",
-    "test:watch": "jest --watch",
     "pretest:cov": "rimraf ./test/__tempdir__/",
     "test:cov": "jest --coverage",
-    "demo:setup": "./bin/pkgdrop --clean --config ./demo/pkgdrop.config.js && npm run demo:setup:pkgs && npm run demo:setup:bundles",
-    "demo:setup:pkgs": "./bin/pkgdrop add es-module-shims@0.4.6 lit-html@1 haunted@4.2.0 lit-element@2.1.0 systemjs@3.1.0 @webcomponents/webcomponentsjs@2.2.8 --config ./demo/pkgdrop.config.js",
-    "demo:setup:bundles": "./bin/pkgdrop add d3@5.9.2 --bundle --optimize --config ./demo/pkgdrop.config.js",
-    "prepublishOnly": "rimraf ./dist && npm run build",
-    "version": "chg release -y && git add -A CHANGELOG.md",
-    "np": "np"
+    "test:watch": "jest --watch",
+    "version": "chg release -y && git add -A CHANGELOG.md"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ],
+    "coverageDirectory": "../coverage",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "./",
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/test/"
+    ],
+    "testEnvironment": "node",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
   },
   "dependencies": {
     "cosmiconfig": "^5.2.0",
@@ -44,10 +92,12 @@
     "@types/node": "^12.12.12",
     "chg": "^0.4.0",
     "execa": "^3.4.0",
+    "husky": "^4.2.3",
     "jest": "^24.9.0",
     "nock": "^11.7.0",
     "np": "^5.1.3",
     "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
     "rimraf": "^3.0.0",
     "short-uuid": "^3.1.1",
     "ts-jest": "^24.2.0",
@@ -59,48 +109,5 @@
     "tslint-config-security": "^1.15.0",
     "tslint-config-swimlane": "^4.0.0",
     "typescript": "^3.7.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "./",
-    "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/test/"
-    ],
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}"
-    ]
-  },
-  "bin": {
-    "pkgdrop": "./bin/pkgdrop"
-  },
-  "files": [
-    "build",
-    "bin"
-  ],
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/swimlane/pkgdrop.git"
-  },
-  "keywords": [
-    "packages",
-    "modules"
-  ],
-  "bugs": {
-    "url": "https://github.com/swimlane/pkgdrop/issues"
-  },
-  "homepage": "https://github.com/swimlane/pkgdrop#readme"
+  }
 }
