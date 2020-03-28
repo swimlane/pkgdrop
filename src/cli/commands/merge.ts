@@ -33,7 +33,7 @@ export default {
     const inputImportmap = await readImportmap(options);
     const file = parameters.array[0];
 
-    if (options.clean) cleanPackagePath(options);
+    if (options.clean) await cleanPackagePath(options);
 
     filesystem.dir(options.package_path);
 

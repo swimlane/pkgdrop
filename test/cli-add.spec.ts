@@ -27,7 +27,7 @@ describe('add', () => {
 
   test('files exist', async () => {
     expect(await sandbox.exists('-/lit-element@2.1.0')).toBe('dir');
-    expect(await sandbox.exists('-/lit-html@1.1.2')).toBe('dir');  // Note: changes to latest v1
+    expect(await sandbox.exists('-/lit-html@1.2.1')).toBe('dir');  // Note: changes to latest v1
     expect(await sandbox.exists('-/importmap.json')).toBe('file');
   });
 

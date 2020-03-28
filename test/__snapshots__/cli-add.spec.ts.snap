@@ -15,7 +15,7 @@ exports[`add can force 1`] = `
 Fetching package information for lit-element@2.1.0
 Fetching dependecy tree for lit-element@2.1.0
 Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.1.2
+Extracting tarball for lit-html@1.2.1
 Writing importmap
 Done! [XX s]"
 `;
@@ -34,7 +34,7 @@ Reading existing importmap
 Fetching package information for lit-element@2.1.0
 Fetching dependecy tree for lit-element@2.1.0
 Extracting tarball for lit-element@2.1.0
-Extracting tarball for lit-html@1.1.2
+Extracting tarball for lit-html@1.2.1
 Writing importmap
 Done! [XX s]"
 `;
@@ -57,10 +57,10 @@ exports[`add importmap 1`] = `
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0/\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.1.2/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.1.2/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.2.1/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.2.1/\\"
     },
-    \\"lit-html@1.1.2/\\": {}
+    \\"lit-html@1.2.1/\\": {}
   }
 }"
 `;
@@ -73,7 +73,7 @@ Fetching dependecy tree for @angular/core@7.0.0
 @angular/core@7.0.0 requires a peer of rxjs@^6.0.0 but none is installed. You must pkgdrop peer dependencies yourself.
 @angular/core@7.0.0 requires a peer of zone.js@~0.8.26 but none is installed. You must pkgdrop peer dependencies yourself.
 Extracting tarball for @angular/core@7.0.0 [dry run]
-Extracting tarball for tslib@1.10.0 [dry run]
+Extracting tarball for tslib@1.11.1 [dry run]
 Writing importmap [dry run]
 Done! [XX s]"
 `;

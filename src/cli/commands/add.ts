@@ -14,7 +14,7 @@ export default {
 
     const options = await getPkgdropOptions();
 
-    if (options.clean) cleanPackagePath(options);
+    if (options.clean) await cleanPackagePath(options);
 
     const packages = parameters.array.filter(Boolean);
 

@@ -28,10 +28,10 @@ exports[`bundle importmap 1`] = `
   },
   \\"scopes\\": {
     \\"lit-element@2.1.0/\\": {
-      \\"lit-html\\": \\"/-/lit-html@1.1.2/lit-html.js\\",
-      \\"lit-html/\\": \\"/-/lit-html@1.1.2/\\"
+      \\"lit-html\\": \\"/-/lit-html@1.2.1/lit-html.js\\",
+      \\"lit-html/\\": \\"/-/lit-html@1.2.1/\\"
     },
-    \\"lit-html@1.1.2/\\": {}
+    \\"lit-html@1.2.1/\\": {}
   }
 }"
 `;
