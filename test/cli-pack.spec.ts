@@ -33,7 +33,9 @@ describe('pack', () => {
 
   describe('merge', () => {
     beforeAll(async () => {
+      nock.enableNetConnect();
       await sandbox.exec(`add lit-element@2.1.0 --clean`);
+      nock.disableNetConnect();
       output = await sandbox.exec(`merge pkgdrop-pack-test.tgz`);
     }, TIMEOUT);
 
@@ -51,14 +53,22 @@ describe('pack', () => {
     });
   });
 
-  test('dryrun', async () => {
-    await sandbox.clean();
-    sandbox = await createSandbox();
-    nock.enableNetConnect();
-    await sandbox.exec(`add lit-element@2.0.0 --clean`);
-    nock.disableNetConnect();
-    output = await sandbox.exec(`pack pkgdrop-pack-test.tgz --dry`);
-    expect(output).toMatchSnapshot();
-    expect(await sandbox.exists('pkgdrop-pack-test.tgz')).toBe(false);
+  describe('dryrun', () => {
+    beforeAll(async () => {
+      await sandbox.clean();
+      sandbox = await createSandbox();
+      nock.enableNetConnect();
+      await sandbox.exec(`add lit-element@2.0.0 --clean`);
+      nock.disableNetConnect();
+      output = await sandbox.exec(`pack pkgdrop-pack-test.tgz --dry`);
+    });
+
+    test('displays console messages', async () => {
+      expect(output).toMatchSnapshot();
+    });
+
+    test('file does not exist', async () => {
+      expect(await sandbox.exists('pkgdrop-pack-test.tgz')).toBe(false);
+    });
   });
 });
