@@ -4,10 +4,10 @@ import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
 import { manifest, packument } from 'pacote';
 import { join } from 'path';
-import { read } from 'libnpmconfig';
-import { expandLocalVersion } from '../../lib';
+import { print } from 'gluegun';
 
-import { print } from 'gluegun'; 
+import { getConfig } from './getConfig';
+import { expandLocalVersion } from '../../lib';
 
 interface PackageNode {
   id: string;
@@ -23,11 +23,12 @@ import { PackageInfo, Scopes, Imports, ImportMap, PkgdropOptions } from '../../l
 
 export async function getMap(packages: string[], importmap: ImportMap, options: PkgdropOptions): Promise<ImportMap> {
   const registry = 'http://registry.npmjs.org/';
-  const npmconfig = read().concat({
+  const npmconfig = {
+    ...getConfig(),
     fullMetadata: true,
-    cache: false
-  });
-  
+    cache: false,
+  };
+
   const { createNpmDependenciesGraph } = buildGraph(httpClient, registry);
 
   const imports: Imports = {};
@@ -80,7 +81,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
       if (n.data.peerDependencies) {
         const peerSet = new Set<string>([]);
         for (const k in n.data.peerDependencies) {
-          peerSet.add(`${k}@${n.data.peerDependencies[k]}`)
+          peerSet.add(`${k}@${n.data.peerDependencies[k]}`);
         }
         peers.set(pkgId, peerSet);
       }
@@ -101,29 +102,30 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
 
   await Promise.all(addScopes);
 
-  peers.forEach((peerSet,pkg) => {
+  peers.forEach((peerSet, pkg) => {
     peerSet.forEach((peer: string) => {
       const e = expandLocalVersion(peer, imports);
       if (!e) {
-        print.warning(`${pkg} requires a peer of ${peer} but none is installed. You must pkgdrop peer dependencies yourself.`);
+        print.warning(
+          `${pkg} requires a peer of ${peer} but none is installed. You must pkgdrop peer dependencies yourself.`
+        );
       }
     });
   });
 
   return {
     imports,
-    scopes
-  }
+    scopes,
+  };
 
   function httpClient(url: string, data: string) {
     url = url.replace(registry, '').replace('?', '').replace('%2f', '/');
-    return packument(url, npmconfig)
-      .then((d: any) => {
-        Object.keys(d.versions).forEach(k => {
-          const v = d.versions[k];
-          v._id = v._id /* istanbul ignore next */ || `${v.name}@${v.version}`;  // For some reason this is missing on private packages.
-        });
-        return { data: d };
+    return packument(url, npmconfig).then((d: any) => {
+      Object.keys(d.versions).forEach((k) => {
+        const v = d.versions[k];
+        v._id = v._id /* istanbul ignore next */ || `${v.name}@${v.version}`; // For some reason this is missing on private packages.
       });
+      return { data: d };
+    });
   }
 }
