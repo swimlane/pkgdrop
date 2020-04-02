@@ -2,9 +2,13 @@
 
 ## HEAD (Unreleased)
 
-- Bumping dependecies
+_(none)_
 
 ---
+
+## 4.0.3 (2020-04-02)
+
+- Bumping dependecies
 
 ## 4.0.2 (2020-03-27)
 
