@@ -2,6 +2,7 @@ node_modules
 /build
 /test/-
 /demo/-
+.idea/
 .vscode
 Dockerfile
 __tempdir__
