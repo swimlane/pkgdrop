@@ -16,7 +16,7 @@ describe('add', () => {
     await sandbox.clean();
   });
 
-  afterEach(()=> {
+  afterEach(() => {
     process.exitCode = null;
   });
 
@@ -27,7 +27,7 @@ describe('add', () => {
 
   test('files exist', async () => {
     expect(await sandbox.exists('-/lit-element@2.1.0')).toBe('dir');
-    expect(await sandbox.exists('-/lit-html@1.2.1')).toBe('dir');  // Note: changes to latest v1
+    expect(await sandbox.exists('-/lit-html@1.4.1')).toBe('dir'); // Note: changes to latest v1
     expect(await sandbox.exists('-/importmap.json')).toBe('file');
   });
 
@@ -68,14 +68,18 @@ describe('add', () => {
     expect(process.exitCode).toBeFalsy();
   });
 
-  test('importmap should add latest as major', async () => {
-    await sandbox.exec(`add lit-html@1.1.0 --clean`);
-    await sandbox.exec(`add lit-html@1.0.0`);
-    let importmap: any = await sandbox.read('-/importmap.json');
-    importmap = JSON.parse(importmap);
-    expect(importmap.imports['lit-html@1']).toBe('/-/lit-html@1.1.0/lit-html.js');
-    expect(process.exitCode).toBeFalsy();
-  }, TIMEOUT);
+  test(
+    'importmap should add latest as major',
+    async () => {
+      await sandbox.exec(`add lit-html@1.1.0 --clean`);
+      await sandbox.exec(`add lit-html@1.0.0`);
+      let importmap: any = await sandbox.read('-/importmap.json');
+      importmap = JSON.parse(importmap);
+      expect(importmap.imports['lit-html@1']).toBe('/-/lit-html@1.1.0/lit-html.js');
+      expect(process.exitCode).toBeFalsy();
+    },
+    TIMEOUT
+  );
 
   test('prints messages for peers', async () => {
     const out = await sandbox.exec(`add @angular/core@7.0.0 --clean --dry`);
