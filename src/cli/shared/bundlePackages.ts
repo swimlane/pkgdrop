@@ -1,10 +1,14 @@
-import { join } from 'path';
+import { posix } from 'path';
 
-import { print, filesystem } from 'gluegun'; 
+import { print, filesystem } from 'gluegun';
 
 import { ImportMap, Imports, PkgdropOptions, genererateBundle, getLocalManifest, expandLocalVersion } from '../../lib/';
 
-export async function bundlePackages(packages: string[], importmap: ImportMap, options: PkgdropOptions): Promise<ImportMap> {
+export async function bundlePackages(
+  packages: string[],
+  importmap: ImportMap,
+  options: PkgdropOptions
+): Promise<ImportMap> {
   const imports: Imports = {};
 
   const buildBundles = packages.map(async (pkg: string) => {
@@ -13,8 +17,8 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
     const pkgId = expandLocalVersion(pkg, importmap.imports);
 
     const outputFilename = `${pkgId}.bundle.js`;
-    const outputPath = join(options.package_path, outputFilename);
-    const entryPath = join(options.package_root, outputFilename);
+    const outputPath = posix.join(options.package_path, outputFilename);
+    const entryPath = posix.join(options.package_root, outputFilename);
 
     if (!options.force && filesystem.exists(outputPath)) {
       print.warning(`Bundle already exists at ${outputPath}, skipping`);
@@ -44,6 +48,6 @@ export async function bundlePackages(packages: string[], importmap: ImportMap, o
 
   return {
     imports,
-    scopes: {}
-  }
+    scopes: {},
+  };
 }
