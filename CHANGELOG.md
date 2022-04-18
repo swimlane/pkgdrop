@@ -2,7 +2,7 @@
 
 ## HEAD (Unreleased)
 
-_(none)_
+- Fix path issues on windows
 
 ---
 

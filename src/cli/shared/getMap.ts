@@ -3,7 +3,7 @@
 import * as createGraph from 'ngraph.graph';
 import * as buildGraph from 'npmgraphbuilder';
 import { manifest, packument } from 'pacote';
-import { join } from 'path';
+import { posix } from 'path';
 import { print } from 'gluegun';
 
 import { getConfig } from './getConfig';
@@ -60,8 +60,8 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
     }
 
     const entryPoint = /* istanbul ignore next */ pkgInfo.module || pkgInfo.main || 'index.js';
-    const outputPath = join(options.package_root, pkgId, '/');
-    const entryPath = join(outputPath, entryPoint);
+    const outputPath = posix.join(options.package_root, pkgId, '/');
+    const entryPath = posix.join(outputPath, entryPoint);
 
     imports[pkgId] = entryPath;
     imports[pkgId + '/'] = outputPath;
@@ -71,7 +71,7 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
     const graph = await createNpmDependenciesGraph(pkgInfo.name, (createGraph as any)(), pkgInfo.version);
 
     graph.forEachNode((n: PackageNode) => {
-      const scopeId = join(n.id, '/');
+      const scopeId = posix.join(n.id, '/');
 
       if (!options.force && importmap.scopes[scopeId]) {
         print.warning(`Scopes for ${scopeId} already exists, skipping`);
@@ -93,8 +93,8 @@ export async function getMap(packages: string[], importmap: ImportMap, options: 
           const name = linkedNode.data.name;
           const ep = /* istanbul ignore next */ linkedNode.data.module || linkedNode.data.main || 'index.js';
 
-          scopes[scopeId][name] = join(options.package_root, link.toId, ep);
-          scopes[scopeId][name + '/'] = join(options.package_root, link.toId, '/');
+          scopes[scopeId][name] = posix.join(options.package_root, link.toId, ep);
+          scopes[scopeId][name + '/'] = posix.join(options.package_root, link.toId, '/');
         }
       });
     });
